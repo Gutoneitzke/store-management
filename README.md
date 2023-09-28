@@ -1,2 +1,2 @@
-# store-management
+# Store management
 Store management project
