@@ -17,10 +17,24 @@ return new class extends Migration
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
+            $table->string('cpf', 150);
+            $table->enum('type', ['ADMIN', 'STORE_OWNER', 'EMPLOYEE'])->nullable();
             $table->rememberToken();
+            $table->enum('gender', ['M', 'F', 'O']);
+            $table->unsignedBigInteger('cities_id');
+            $table->string('address_street', 150);
+            $table->string('address_number', 150);
+            $table->string('address_neighborhood', 150);
+            $table->string('address_complement', 150)->nullable();
             $table->foreignId('current_team_id')->nullable();
             $table->string('profile_photo_path', 2048)->nullable();
             $table->timestamps();
+
+            $table->foreign('cities_id')
+                ->references('id')
+                ->on('cities')
+                ->onDelete('no action')
+                ->onUpdate('no action');
         });
     }
 
