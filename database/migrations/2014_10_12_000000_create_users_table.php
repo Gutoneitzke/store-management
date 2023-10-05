@@ -21,7 +21,6 @@ return new class extends Migration
             $table->enum('type', ['ADMIN', 'STORE_OWNER', 'EMPLOYEE'])->nullable();
             $table->rememberToken();
             $table->enum('gender', ['M', 'F', 'O']);
-            $table->unsignedBigInteger('cities_id');
             $table->string('address_street', 150);
             $table->string('address_number', 150);
             $table->string('address_neighborhood', 150);
@@ -29,12 +28,6 @@ return new class extends Migration
             $table->foreignId('current_team_id')->nullable();
             $table->string('profile_photo_path', 2048)->nullable();
             $table->timestamps();
-
-            $table->foreign('cities_id')
-                ->references('id')
-                ->on('cities')
-                ->onDelete('no action')
-                ->onUpdate('no action');
         });
     }
 
