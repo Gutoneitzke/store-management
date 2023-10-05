@@ -27,6 +27,17 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'cpf',
+        'type',
+        'gender',
+        'cities_id',
+        'cities_id',
+        'address_street',
+        'address_number',
+        'address_neighborhood',
+        'address_complement',
+        'current_team_id',
+        'profile_photo_path',
     ];
 
     /**
@@ -58,4 +69,9 @@ class User extends Authenticatable
     protected $appends = [
         'profile_photo_url',
     ];
+
+    public function city()
+    {
+        return $this->belongsTo(City::class, 'cities_id');
+    }
 }
