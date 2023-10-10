@@ -12,26 +12,6 @@
                         Dashboard
                     </Link>
                 </li>
-                <li>
-                    <Link :href="route('activeusers.index')">
-                        Usuários ativos
-                    </Link>
-                </li>
-                <li>
-                    <Link :href="route('comprovants.index')">
-                        Contratos/Comprovantes
-                    </Link>
-                </li>
-                <li>
-                    <Link :href="route('specialcontracts.index')">
-                        Contratos especiais
-                    </Link>
-                </li>
-                <li>
-                    <Link :href="route('ipca.index')">
-                        IPCA
-                    </Link>
-                </li>
             </ul>
         </nav>
         <div class="header-right">
