@@ -11,7 +11,6 @@ import TextInput from '@/Components/TextInput.vue';
 const form = useForm({
     email: '',
     password: '',
-    cpf: '',
     remember: false,
 });
 
@@ -46,20 +45,6 @@ const submit = () => {
                     autocomplete="username"
                 />
                 <InputError class="mt-2" :message="form.errors.email" />
-            </div>
-
-            <div class="mt-4">
-                <InputLabel for="cpf" value="CPF" />
-                <TextInput
-                    id="cpf"
-                    v-model="form.cpf"
-                    type="text"
-                    class="mt-1 block w-full"
-                    required
-                    autofocus
-                    autocomplete="username"
-                />
-                <InputError class="mt-2" :message="form.errors.cpf" />
             </div>
 
             <div class="mt-4">
