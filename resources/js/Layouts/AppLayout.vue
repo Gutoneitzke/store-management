@@ -72,19 +72,19 @@ const logout = () => {
 
                                     <template #content>
                                         <div class="w-60">
-                                            <!-- Team Management -->
-                                            <div class="block px-4 py-2 text-xs text-gray-400">
+                                            Team Management
+                                            <!-- <div class="block px-4 py-2 text-xs text-gray-400">
                                                 Manage Team
-                                            </div>
+                                            </div> -->
 
                                             <!-- Team Settings -->
-                                            <DropdownLink :href="route('teams.show', $page.props.auth.user.current_team)">
+                                            <!-- <DropdownLink :href="route('teams.show', $page.props.auth.user.current_team)">
                                                 Team Settings
-                                            </DropdownLink>
+                                            </DropdownLink> -->
 
-                                            <DropdownLink v-if="$page.props.jetstream.canCreateTeams" :href="route('teams.create')">
+                                            <!-- <DropdownLink v-if="$page.props.jetstream.canCreateTeams" :href="route('teams.create')">
                                                 Create New Team
-                                            </DropdownLink>
+                                            </DropdownLink> -->
 
                                             <!-- Team Switcher -->
                                             <template v-if="$page.props.auth.user.all_teams.length > 1">
