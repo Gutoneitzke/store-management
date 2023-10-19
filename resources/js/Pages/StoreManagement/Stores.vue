@@ -1,6 +1,6 @@
 <template>
-    <AppLayout title="Vendas">
-        <h1>Vendas | Saídas</h1>
+    <AppLayout title="Lojas">
+        <h1>Lojas</h1>
     </AppLayout>
 </template>
 
