@@ -1,24 +1,22 @@
 <template>
-    <app-public>
-        <h1>Store Management</h1>
-    </app-public>
+    <AppLayout title="Vendas">
+        <PageCard>
+            <h1>Home</h1>
+        </PageCard>
+    </AppLayout>
 </template>
 
 <script>
-import AppPublic from '@/Layouts/AppPublic.vue';
+import AppLayout from '@/Layouts/AppLayout.vue';
+import PageCard from '@/Components/PageCard.vue';
 export default {
     components: {
-        AppPublic
+        AppLayout,
+        PageCard
     }
 }
 </script>
 
 <style lang="scss" scoped>
-    *{
-        height: 90vh;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        color: $white;
-    }
+    
 </style>

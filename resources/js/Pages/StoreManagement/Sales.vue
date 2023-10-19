@@ -1,14 +1,18 @@
 <template>
     <AppLayout title="Vendas">
-        <h1>Vendas | Saídas</h1>
+        <PageCard>
+            <h1>Vendas | Saídas</h1>
+        </PageCard>
     </AppLayout>
 </template>
 
 <script>
 import AppLayout from '@/Layouts/AppLayout.vue';
+import PageCard from '@/Components/PageCard.vue';
 export default {
     components: {
-        AppLayout
+        AppLayout,
+        PageCard
     }
 }
 </script>
