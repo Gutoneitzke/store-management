@@ -12,6 +12,7 @@ const form = useForm({
     name: '',
     email: '',
     cpf: '',
+    country: '',
     password: '',
     password_confirmation: '',
     terms: false,
@@ -69,9 +70,22 @@ const submit = () => {
                     type="email"
                     class="mt-1 block w-full"
                     required
-                    autocomplete="username"
+                    autocomplete="email"
                 />
                 <InputError class="mt-2" :message="form.errors.email" />
+            </div>
+
+            <div class="mt-4">
+                <InputLabel for="country" value="País" />
+                <TextInput
+                    id="country"
+                    v-model="form.country"
+                    type="text"
+                    class="mt-1 block w-full"
+                    required
+                    autocomplete="coutry"
+                />
+                <InputError class="mt-2" :message="form.errors.country" />
             </div>
 
             <div class="mt-4">
