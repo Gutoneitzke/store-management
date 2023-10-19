@@ -8,15 +8,24 @@ import InputLabel from '@/Components/InputLabel.vue';
 import PrimaryButton from '@/Components/PrimaryButton.vue';
 import TextInput from '@/Components/TextInput.vue';
 
+const props = defineProps({
+    countries: Array,
+    states: Array,
+});
+
 const form = useForm({
     name: '',
     email: '',
     cpf: '',
     country: '',
+    state: '',
     password: '',
     password_confirmation: '',
     terms: false,
 });
+
+const countries = props.countries
+const states = props.states
 
 const submit = () => {
     form.post(route('register'), {
@@ -75,17 +84,22 @@ const submit = () => {
                 <InputError class="mt-2" :message="form.errors.email" />
             </div>
 
-            <div class="mt-4">
-                <InputLabel for="country" value="País" />
-                <TextInput
-                    id="country"
-                    v-model="form.country"
-                    type="text"
-                    class="mt-1 block w-full"
-                    required
-                    autocomplete="coutry"
-                />
-                <InputError class="mt-2" :message="form.errors.country" />
+            <div :class="['mt-4 grid gap-4', form.country ? 'grid-cols-2' : '']">
+                <div class="flex gap-1 flex-col">
+                    <InputLabel for="country" value="País" />
+                    <select v-model="form.country" id="country" class="border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm">
+                        <option v-for="c,i in countries" :key="i" :value="c.id" v-text="c.name"></option>
+                    </select>
+                    <InputError class="mt-2" :message="form.errors.country" />
+                </div>
+
+                <div v-if="form.country" class="flex gap-1 flex-col">
+                    <InputLabel for="state" value="Estado" />
+                    <select v-model="form.state" id="state" class="border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm">
+                        <option v-for="s,i in states" :key="i" :value="s.id" v-text="s.name"></option>
+                    </select>
+                    <InputError class="mt-2" :message="form.errors.state" />
+                </div>
             </div>
 
             <div class="mt-4 grid gap-4 grid-cols-2">
