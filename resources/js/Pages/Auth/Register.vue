@@ -123,7 +123,7 @@ const submit = () => {
 
             <div v-if="form.state" :class="['mt-4 grid gap-4', form.city ? 'grid-cols-2' : '']">
                 <div class="flex gap-1 flex-col">
-                    <InputLabel for="city" value="City" />
+                    <InputLabel for="city" value="Cidade" />
                     <select v-model="form.city" id="city" class="border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm">
                         <option v-for="c,i in cities" :key="i" :value="c.id" v-text="c.name"></option>
                     </select>
@@ -174,7 +174,7 @@ const submit = () => {
 
             <div v-if="form.city" class="mt-4 grid">
                 <div class="flex gap-1 flex-col">
-                    <InputLabel for="address_complement" value="Complement" />
+                    <InputLabel for="address_complement" value="Complemento" />
                     <TextInput
                         id="address_complement"
                         v-model="form.address_complement"
