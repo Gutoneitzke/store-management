@@ -12,7 +12,7 @@ class StoresController extends Controller
      */
     public function index()
     {
-        return Inertia::render('StoreManagement/Stores');
+        return Inertia::render('StoreManagement/Stores/Stores');
     }
 
     /**
@@ -20,7 +20,7 @@ class StoresController extends Controller
      */
     public function create()
     {
-        //
+        return Inertia::render('StoreManagement/Stores/NewStore');
     }
 
     /**

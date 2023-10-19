@@ -54,37 +54,37 @@ const logout = () => {
                             </div>
 
                             <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
-                                <NavLink :href="route('stores.index')" :active="route().current('stores.index')">
+                                <NavLink :href="route('stores.index')" :active="route().current('stores.*')">
                                     Lojas
                                 </NavLink>
                             </div>
 
                             <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
-                                <NavLink :href="route('stocks.index')" :active="route().current('stocks.index')">
+                                <NavLink :href="route('stocks.index')" :active="route().current('stocks.*')">
                                     Estoque
                                 </NavLink>
                             </div>
 
                             <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
-                                <NavLink :href="route('sales.index')" :active="route().current('sales.index')">
+                                <NavLink :href="route('sales.index')" :active="route().current('sales.*')">
                                     Vendas
                                 </NavLink>
                             </div>
 
                             <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
-                                <NavLink :href="route('employers.index')" :active="route().current('employers.index')">
+                                <NavLink :href="route('employers.index')" :active="route().current('employers.*')">
                                     Funcionários
                                 </NavLink>
                             </div>
 
                             <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
-                                <NavLink :href="route('suppliers.index')" :active="route().current('suppliers.index')">
+                                <NavLink :href="route('suppliers.index')" :active="route().current('suppliers.*')">
                                     Fornecedores
                                 </NavLink>
                             </div>
 
                             <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
-                                <NavLink :href="route('customers.index')" :active="route().current('customers.index')">
+                                <NavLink :href="route('customers.index')" :active="route().current('customers.*')">
                                     Clientes
                                 </NavLink>
                             </div>
