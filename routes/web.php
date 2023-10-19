@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\CategoriesController;
 use App\Http\Controllers\CustomersController;
 use App\Http\Controllers\EmployersController;
 use App\Http\Controllers\SalesController;
@@ -32,6 +33,15 @@ Route::get('/', function () {
 
 Route::middleware(['auth:sanctum',config('jetstream.auth_session'),'verified',])->group(function () {
     Route::get('/dashboard', function () {return Inertia::render('Dashboard');})->name('dashboard');
+
+    Route::prefix('categories')->controller(CategoriesController::class)->name('categories.')->group(function() {
+        Route::get('/', 'index')->name('index');
+        Route::get('/create', 'create')->name('create');
+        Route::post('/', 'store')->name('store');
+        Route::get('/{id}/edit', 'edit')->where('id', '[0-9]+')->name('edit');
+        Route::put('/update/{id}', 'update')->where('id', '[0-9]+')->name('update');
+        Route::delete('/{id}', 'destroy')->where('id', '[0-9]+')->name('destroy');
+    });
 
     Route::prefix('stores')->controller(StoresController::class)->name('stores.')->group(function() {
         Route::get('/', 'index')->name('index');
