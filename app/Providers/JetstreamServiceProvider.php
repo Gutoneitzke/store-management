@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use App\Actions\Jetstream\DeleteUser;
+use App\Models\City;
 use App\Models\Country;
 use App\Models\State;
 use Illuminate\Support\ServiceProvider;
@@ -33,6 +34,7 @@ class JetstreamServiceProvider extends ServiceProvider
             return Inertia::render('Auth/Register', [
                 'countries' => Country::all(),
                 'states' => State::all(),
+                'cities' => City::all(),
             ]);
         });
     }
