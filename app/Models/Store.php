@@ -13,8 +13,11 @@ class Store extends Model
         'name',
         'cnpj',
         'description',
-        'address',
         'cities_id',
+        'address_street',
+        'address_neighborhood',
+        'address_number',
+        'address_complement'
     ];
 
     public function city()

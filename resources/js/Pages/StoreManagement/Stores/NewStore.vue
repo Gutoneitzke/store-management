@@ -18,7 +18,19 @@ export default {
         AppLayout,
         PageCard,
         Link
-    }
+    },
+    data() {
+        return {
+            name: '',
+            cnpj: '',
+            description: '',
+            city: '',
+            address_street: '',
+            address_neighborhood: '',
+            address_number: '',
+            address_complement: '',
+        }
+    },
 }
 </script>
 
