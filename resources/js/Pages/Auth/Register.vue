@@ -81,7 +81,12 @@ const submit = () => {
 
                 <div class="flex gap-1 flex-col">
                     <InputLabel for="gender" value="Sexo" />
-                    <select v-model="form.gender" id="gender" class="border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm">
+                    <select 
+                        v-model="form.gender" 
+                        id="gender" 
+                        required
+                        class="border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm"
+                    >
                         <option value="m">Masculino</option>
                         <option value="f">Feminino</option>
                         <option value="o">Outro</option>
@@ -106,7 +111,12 @@ const submit = () => {
             <div :class="['mt-4 grid gap-4', form.country ? 'grid-cols-2' : '']">
                 <div class="flex gap-1 flex-col">
                     <InputLabel for="country" value="País" />
-                    <select v-model="form.country" id="country" class="border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm">
+                    <select 
+                        v-model="form.country" 
+                        id="country" 
+                        class="border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm"
+                        required
+                    >
                         <option v-for="c,i in countries" :key="i" :value="c.id" v-text="c.name"></option>
                     </select>
                     <InputError class="mt-2" :message="form.errors.country" />
@@ -114,7 +124,12 @@ const submit = () => {
 
                 <div v-if="form.country" class="flex gap-1 flex-col">
                     <InputLabel for="state" value="Estado" />
-                    <select v-model="form.state" id="state" class="border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm">
+                    <select 
+                        v-model="form.state" 
+                        id="state" 
+                        class="border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm"
+                        required
+                    >
                         <option v-for="s,i in states" :key="i" :value="s.id" v-text="s.name"></option>
                     </select>
                     <InputError class="mt-2" :message="form.errors.state" />
@@ -124,7 +139,12 @@ const submit = () => {
             <div v-if="form.state" :class="['mt-4 grid gap-4', form.city ? 'grid-cols-2' : '']">
                 <div class="flex gap-1 flex-col">
                     <InputLabel for="city" value="Cidade" />
-                    <select v-model="form.city" id="city" class="border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm">
+                    <select 
+                        v-model="form.city" 
+                        id="city" 
+                        class="border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm"
+                        required
+                    >
                         <option v-for="c,i in cities" :key="i" :value="c.id" v-text="c.name"></option>
                     </select>
                     <InputError class="mt-2" :message="form.errors.city" />
