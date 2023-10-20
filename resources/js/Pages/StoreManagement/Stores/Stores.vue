@@ -1,10 +1,12 @@
 <template>
     <AppLayout title="Lojas">
         <PageCard>
-            <h1>Lojas</h1>
-            <Link :href="route('stores.create')">
-                Nova Loja
-            </Link>
+            <div class="flex gp-2 items-center justify-between">
+                <h1 class="text-2xl">Lojas</h1>
+                <Link :href="route('stores.create')">
+                    Nova Loja
+                </Link>
+            </div>
         </PageCard>
     </AppLayout>
 </template>

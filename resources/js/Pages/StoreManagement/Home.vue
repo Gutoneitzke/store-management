@@ -1,7 +1,7 @@
 <template>
     <AppLayout title="Vendas">
         <PageCard>
-            <h1>Home</h1>
+            <h1 class="text-2xl">Home</h1>
         </PageCard>
     </AppLayout>
 </template>

@@ -1,7 +1,7 @@
 <template>
     <AppLayout title="Estoque">
         <PageCard>
-            <h1>Estoque contará com:</h1>
+            <h1 class="text-2xl">Estoque contará com:</h1>
             <ul>
                 <li>Produtos (quantidade em estoque)</li>
                 <li>Entradas/compras (dos fornecedores)</li>

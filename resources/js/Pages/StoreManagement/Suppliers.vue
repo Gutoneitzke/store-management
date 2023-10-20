@@ -1,7 +1,7 @@
 <template>
     <AppLayout title="Fornecedores">
         <PageCard>
-            <h1>Fornecedores</h1>
+            <h1 class="text-2xl">Fornecedores</h1>
         </PageCard>
     </AppLayout>
 </template>
