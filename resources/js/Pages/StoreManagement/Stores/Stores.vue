@@ -7,6 +7,7 @@
                     Nova Loja
                 </Link>
             </div>
+            {{ stores }}
         </PageCard>
     </AppLayout>
 </template>
@@ -20,7 +21,8 @@ export default {
         AppLayout,
         PageCard,
         Link
-    }
+    },
+    props: ['stores']
 }
 </script>
 

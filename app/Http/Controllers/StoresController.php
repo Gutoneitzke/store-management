@@ -15,7 +15,9 @@ class StoresController extends Controller
      */
     public function index()
     {
-        return Inertia::render('StoreManagement/Stores/Stores');
+        return Inertia::render('StoreManagement/Stores/Stores',[
+            'stores' => Store::all()
+        ]);
     }
 
     /**
