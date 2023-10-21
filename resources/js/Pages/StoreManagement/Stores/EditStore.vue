@@ -1,8 +1,8 @@
 <template>
-    <AppLayout title="Nova Loja">
+    <AppLayout title="Editar Loja">
         <PageCard>
             <div class="flex gp-2 items-center justify-between">
-                <h1 class="text-2xl">Nova Loja</h1>
+                <h1 class="text-2xl">Editando Loja: {{ store.name }}</h1>
                 <Link :href="route('stores.index')">
                     Voltar
                 </Link>
@@ -116,7 +116,7 @@
 
                     <div class="flex items-center justify-end mt-4">
                         <PrimaryButton class="mt-4" :class="{ 'opacity-25': processing }" :disabled="processing">
-                            Cadastrar
+                            Editar
                         </PrimaryButton>
                     </div>
                 </form>
@@ -141,18 +141,18 @@ export default {
         TextInput,
         PrimaryButton
     },
-    props: ['cities'],
+    props: ['cities','store'],
     data() {
         return {
             form: {
-                name: '',
-                cnpj: '',
-                description: '',
-                city: '',
-                address_street: '',
-                address_neighborhood: '',
-                address_number: '',
-                address_complement: '',
+                name: this.store.name,
+                cnpj: this.store.cnpj,
+                description: this.store.description,
+                city: this.store.cities_id,
+                address_street: this.store.address_street,
+                address_neighborhood: this.store.address_neighborhood,
+                address_number: this.store.address_number,
+                address_complement: this.store.address_complement,
             },
             processing: false,
             fieldsToValidate: ['name','cnpj','city']
@@ -163,9 +163,8 @@ export default {
             this.processing = true;
             const formState = this.isValidForm();
             if(formState){
-                this.$inertia.post(route('stores.store'), this.form, {
-                    forceFormData: true,
-                    onSuccess: (data) => {
+                this.$inertia.put(route('stores.update', this.store.id), this.form, {
+                    onSuccess: () => {
                         console.log('sucesso')
                     },
                     onError: (error) => {

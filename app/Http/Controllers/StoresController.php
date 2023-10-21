@@ -49,12 +49,12 @@ class StoresController extends Controller
         try {
             $store = Store::create($storeData);
             
-            if ($store) {
+            if($store){
                 return redirect(route('stores.index'));
             }
             new Exception();
         } catch (\Exception $e) {
-            return redirect()->back()->with('error', 'Falha ao criar a loja: ');
+            return redirect()->back()->with('error', 'Falha ao criar a loja!');
         }
     }
 
@@ -71,7 +71,17 @@ class StoresController extends Controller
      */
     public function edit(string $id)
     {
-        //
+        $cities = City::all();
+        $store = Store::where('id','=',$id)->first();
+
+        if($store->count() === 0){
+            return redirect(route('stores.index'));
+        } else {
+            return Inertia::render('StoreManagement/Stores/EditStore',[
+                'cities' => $cities,
+                'store'  => $store
+            ]);
+        }
     }
 
     /**
@@ -79,7 +89,27 @@ class StoresController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        $storeData = [
+            'name'                 => $request['name'],
+            'cnpj'                 => $request['cnpj'],
+            'description'          => $request['description'],
+            'cities_id'            => $request['city'],
+            'address_street'       => $request['address_street'],
+            'address_neighborhood' => $request['address_neighborhood'],
+            'address_number'       => $request['address_number'],
+            'address_complement'   => $request['address_complement'],
+        ];
+
+        try {
+            $store = Store::where('id', '=', $id)->update($storeData);
+            
+            if($store){
+                return redirect(route('stores.index'));
+            }
+            new Exception();
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', 'Falha ao editar a loja!');
+        }
     }
 
     /**
