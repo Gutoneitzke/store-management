@@ -117,6 +117,13 @@ class StoresController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        try {
+            $store = Store::findOrFail($id);
+            $store->delete();
+
+            return redirect(route('stores.index'))->with('message', 'Store Deleted Successfully');
+        } catch (\Exception $e) {
+            return redirect(route('stores.index'))->with('message', 'Error');
+        }
     }
 }
