@@ -26,12 +26,14 @@ class EmployersController extends Controller
                             ->join('users_has_stores', 'users.id', '=', 'users_has_stores.users_id')
                             ->where('users_has_stores.stores_id', $selectedStore['id'])
                             ->where('users.id', '!=', auth()->id())
+                            ->select('users.*')
                             ->get();
         } else {
             $employers = User::where('type', 'EMPLOYEE')
                             ->join('users_has_stores', 'users.id', '=', 'users_has_stores.users_id')
                             ->whereIn('users_has_stores.stores_id', $this->getMyStoresTrait())
                             ->where('users.id', '!=', auth()->id())
+                            ->select('users.*')
                             ->get();
         }
 
