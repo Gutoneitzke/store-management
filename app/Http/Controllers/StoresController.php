@@ -22,6 +22,8 @@ class StoresController extends Controller
         $stores = Store::with('city')
             ->join('users_has_stores', 'stores.id', '=', 'users_has_stores.stores_id')
             ->where('users_has_stores.users_id', $userId)
+            ->join('users', 'users.id', '=', 'users_has_stores.users_id')
+            ->whereIn('users.type', ['ADMIN','STORE_OWNER'])
             ->select('stores.*')
             ->get();
 
