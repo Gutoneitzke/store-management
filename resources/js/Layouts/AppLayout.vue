@@ -92,7 +92,7 @@ const logout = () => {
                             </div>
                         </div>
                         
-                        <div class="hidden sm:items-center space-x-8 sm:-my-px sm:ml-10 sm:flex">
+                        <div v-if="!route().current('stores.*')" class="hidden sm:items-center space-x-8 sm:-my-px sm:ml-10 sm:flex">
                             <!-- Settings Dropdown -->
                             <div class="ml-3 relative">
                                 <Dropdown align="right" width="48">
