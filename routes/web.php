@@ -7,6 +7,7 @@ use App\Http\Controllers\SalesController;
 use App\Http\Controllers\StocksController;
 use App\Http\Controllers\StoresController;
 use App\Http\Controllers\SuppliersController;
+use App\Http\Controllers\UsersController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -90,6 +91,15 @@ Route::middleware(['auth:sanctum',config('jetstream.auth_session'),'verified',])
     });
 
     Route::prefix('customers')->controller(CustomersController::class)->name('customers.')->group(function() {
+        Route::get('/', 'index')->name('index');
+        Route::get('/create', 'create')->name('create');
+        Route::post('/', 'store')->name('store');
+        Route::get('/{id}/edit', 'edit')->where('id', '[0-9]+')->name('edit');
+        Route::put('/update/{id}', 'update')->where('id', '[0-9]+')->name('update');
+        Route::delete('/{id}', 'destroy')->where('id', '[0-9]+')->name('destroy');
+    });
+
+    Route::prefix('users')->controller(UsersController::class)->name('users.')->group(function() {
         Route::get('/', 'index')->name('index');
         Route::get('/create', 'create')->name('create');
         Route::post('/', 'store')->name('store');
