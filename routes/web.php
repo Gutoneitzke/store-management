@@ -50,6 +50,7 @@ Route::middleware(['auth:sanctum',config('jetstream.auth_session'),'verified',])
         Route::get('/{id}/edit', 'edit')->where('id', '[0-9]+')->name('edit');
         Route::put('/update/{id}', 'update')->where('id', '[0-9]+')->name('update');
         Route::delete('/{id}', 'destroy')->where('id', '[0-9]+')->name('destroy');
+        Route::get('/{id}/selected-store', 'selectedStore')->where('id', '[0-9]+')->name('selected');
     });
 
     Route::prefix('stocks')->controller(StocksController::class)->name('stocks.')->group(function() {

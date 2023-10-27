@@ -91,11 +91,6 @@ export default {
         Link
     },
     props: ['stores'],
-    data() {
-        return {
-            
-        }
-    },
     methods: {
         deleteStore(id){
             let status = confirm('Tem certeza que deseja deletar ?');
