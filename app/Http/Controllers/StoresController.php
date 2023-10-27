@@ -4,8 +4,11 @@ namespace App\Http\Controllers;
 
 use App\Models\City;
 use App\Models\Store;
+use App\Models\UserStore;
 use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Session;
 use Inertia\Inertia;
 
 class StoresController extends Controller
@@ -15,9 +18,28 @@ class StoresController extends Controller
      */
     public function index()
     {
+        $userId = Auth::id();
+        $stores = Store::with('city')
+            ->join('users_has_stores', 'stores.id', '=', 'users_has_stores.stores_id')
+            ->where('users_has_stores.users_id', $userId)
+            ->select('stores.*')
+            ->get();
+
         return Inertia::render('StoreManagement/Stores/Stores',[
-            'stores' => Store::with('city')->get()
+            'stores' => $stores
         ]);
+    }
+
+    /**
+     * Set selected store to show data
+     */
+    public function selectedStore(Request $request){
+        $storeId = $request->id;
+        $store = Store::find($storeId);
+
+        session(['mySelectedStore' => $store]);
+
+        return redirect()->back();
     }
 
     /**
@@ -48,22 +70,21 @@ class StoresController extends Controller
 
         try {
             $store = Store::create($storeData);
+
+            $userStoreData = [
+                'users_id'  => Auth::id(),
+                'stores_id' => $store->id
+            ];
+
+            $userStore = UserStore::create($userStoreData);
             
-            if($store){
+            if($store && $userStore){
                 return redirect(route('stores.index'));
             }
             new Exception();
         } catch (\Exception $e) {
             return redirect()->back()->with('error', 'Falha ao criar a loja!');
         }
-    }
-
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        //
     }
 
     /**
@@ -118,12 +139,17 @@ class StoresController extends Controller
     public function destroy(string $id)
     {
         try {
-            $store = Store::findOrFail($id);
-            $store->delete();
+            $userStore = UserStore::where('stores_id','=',$id);
+            $store = Store::find($id);
 
-            return redirect(route('stores.index'))->with('message', 'Store Deleted Successfully');
+            $userStore->delete();
+            $store->delete();
+            
+            Session::flash('message', 'Store Deleted Successfully');
         } catch (\Exception $e) {
-            return redirect(route('stores.index'))->with('message', 'Error');
+            Session::flash('message', 'Error to delete');
         }
+
+        return redirect(route('stores.index'));
     }
 }
