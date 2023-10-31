@@ -18,6 +18,7 @@ const form = useForm({
     name: '',
     email: '',
     cpf: '',
+    type: 'STORE_OWNER',
     gender: '',
     country: '',
     state: '',
@@ -51,7 +52,7 @@ const submit = () => {
 
         <form @submit.prevent="submit">
             <div>
-                <InputLabel for="name" value="Nome" />
+                <InputLabel for="name" value="Nome *" />
                 <TextInput
                     id="name"
                     v-model="form.name"
@@ -66,7 +67,7 @@ const submit = () => {
 
             <div class="mt-4 grid gap-4 grid-cols-2">
                 <div>
-                    <InputLabel for="cpf" value="CPF" />
+                    <InputLabel for="cpf" value="CPF *" />
                     <TextInput
                         id="cpf"
                         v-model="form.cpf"
@@ -80,7 +81,7 @@ const submit = () => {
                 </div>
 
                 <div class="flex gap-1 flex-col">
-                    <InputLabel for="gender" value="Sexo" />
+                    <InputLabel for="gender" value="Sexo *" />
                     <select 
                         v-model="form.gender" 
                         id="gender" 
@@ -96,7 +97,7 @@ const submit = () => {
             </div>
 
             <div class="mt-4">
-                <InputLabel for="email" value="Email" />
+                <InputLabel for="email" value="Email *" />
                 <TextInput
                     id="email"
                     v-model="form.email"
@@ -110,7 +111,7 @@ const submit = () => {
 
             <div :class="['mt-4 grid gap-4', form.country ? 'grid-cols-2' : '']">
                 <div class="flex gap-1 flex-col">
-                    <InputLabel for="country" value="País" />
+                    <InputLabel for="country" value="País *" />
                     <select 
                         v-model="form.country" 
                         id="country" 
@@ -123,7 +124,7 @@ const submit = () => {
                 </div>
 
                 <div v-if="form.country" class="flex gap-1 flex-col">
-                    <InputLabel for="state" value="Estado" />
+                    <InputLabel for="state" value="Estado *" />
                     <select 
                         v-model="form.state" 
                         id="state" 
@@ -138,7 +139,7 @@ const submit = () => {
 
             <div v-if="form.state" :class="['mt-4 grid gap-4', form.city ? 'grid-cols-2' : '']">
                 <div class="flex gap-1 flex-col">
-                    <InputLabel for="city" value="Cidade" />
+                    <InputLabel for="city" value="Cidade *" />
                     <select 
                         v-model="form.city" 
                         id="city" 
@@ -151,7 +152,7 @@ const submit = () => {
                 </div>
 
                 <div v-if="form.city" class="flex gap-1 flex-col">
-                    <InputLabel for="address_street" value="Rua" />
+                    <InputLabel for="address_street" value="Rua *" />
                     <TextInput
                         id="address_street"
                         v-model="form.address_street"
@@ -166,7 +167,7 @@ const submit = () => {
 
             <div v-if="form.city" :class="['mt-4 grid gap-4', form.city ? 'grid-cols-2' : '']">
                 <div class="flex gap-1 flex-col">
-                    <InputLabel for="address_neighborhood" value="Bairro" />
+                    <InputLabel for="address_neighborhood" value="Bairro *" />
                     <TextInput
                         id="address_neighborhood"
                         v-model="form.address_neighborhood"
@@ -179,7 +180,7 @@ const submit = () => {
                 </div>
 
                 <div class="flex gap-1 flex-col">
-                    <InputLabel for="address_number" value="Número" />
+                    <InputLabel for="address_number" value="Número *" />
                     <TextInput
                         id="address_number"
                         v-model="form.address_number"
@@ -200,7 +201,6 @@ const submit = () => {
                         v-model="form.address_complement"
                         type="text"
                         class="mt-1 block w-full"
-                        required
                         autocomplete="address_complement"
                     />
                     <InputError class="mt-2" :message="form.errors.address_complement" />
@@ -209,7 +209,7 @@ const submit = () => {
 
             <div class="mt-4 grid gap-4 grid-cols-2">
                 <div>
-                    <InputLabel for="password" value="Senha" />
+                    <InputLabel for="password" value="Senha *" />
                     <TextInput
                         id="password"
                         v-model="form.password"
@@ -222,7 +222,7 @@ const submit = () => {
                 </div>
 
                 <div>
-                    <InputLabel for="password_confirmation" value="Confirmar Senha" />
+                    <InputLabel for="password_confirmation" value="Confirmar Senha *" />
                     <TextInput
                         id="password_confirmation"
                         v-model="form.password_confirmation"
