@@ -2,11 +2,16 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\City;
+use App\Models\Country;
+use App\Models\State;
+use App\Models\Store;
 use App\Models\User;
 use App\Models\UserStore;
 use App\Traits\HasSelectedStoreTrait;
 use App\Traits\MyStoresTrait;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 use Inertia\Inertia;
 
 class EmployersController extends Controller
@@ -47,7 +52,14 @@ class EmployersController extends Controller
      */
     public function create()
     {
-        //
+        $stores = Store::whereIn('stores.id', $this->getMyStoresTrait())->get();
+
+        return Inertia::render('StoreManagement/Employers/NewEmployer',[
+            'countries' => Country::all(),
+            'states'    => State::all(),
+            'cities'    => City::all(),
+            'stores'    => $stores
+        ]);
     }
 
     /**
@@ -55,15 +67,33 @@ class EmployersController extends Controller
      */
     public function store(Request $request)
     {
-        //
-    }
+        $userData = [
+            'name'                 => $request['name'],
+            'email'                => $request['email'],
+            'cpf'                  => $request['cpf'],
+            'type'                 => $request['type'],
+            'cities_id'            => $request['city'],
+            'address_street'       => $request['address_street'],
+            'address_number'       => $request['address_number'],
+            'address_neighborhood' => $request['address_neighborhood'],
+            'address_complement'   => $request['address_complement'],
+            'password'             => Hash::make($request['password']),
+        ];
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        //
+        try {
+            $user = User::create($userData);
+
+            $userStoreData = [
+                'users_id'  => $user->id,
+                'stores_id' => $request['store_id']
+            ];
+
+            UserStore::create($userStoreData);
+            
+            return redirect(route('employers.index'));
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', 'Falha ao criar funcionário(a)!');
+        }
     }
 
     /**
