@@ -2,6 +2,7 @@
 
 namespace App\Actions\Fortify;
 
+use App\Enums\UserType;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
@@ -23,6 +24,7 @@ class CreateNewUser implements CreatesNewUsers
             'name'                 => ['required', 'string', 'max:255'],
             'email'                => ['required', 'string', 'email', 'max:255', 'unique:users'],
             'cpf'                  => ['required', 'string', 'max:255'],
+            'type'                 => ['required', 'string', 'in:' . implode(',', UserType::toArray())],
             'city'                 => ['required'],
             'address_street'       => ['required', 'string', 'max:255'],
             'address_number'       => ['required', 'string', 'max:255'],
@@ -36,6 +38,7 @@ class CreateNewUser implements CreatesNewUsers
             'name'                 => $input['name'],
             'email'                => $input['email'],
             'cpf'                  => $input['cpf'],
+            'type'                 => $input['type'],
             'cities_id'            => $input['city'],
             'address_street'       => $input['address_street'],
             'address_number'       => $input['address_number'],
