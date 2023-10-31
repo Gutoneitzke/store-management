@@ -16,6 +16,10 @@ defineProps({
 
 const showingNavigationDropdown = ref(false);
 
+const hasStores = () => {
+    $page.props.myStores.length > 0
+};
+
 const switchToTeam = (team) => {
     router.put(route('current-team.update'), {
         team_id: team.id,
@@ -61,38 +65,38 @@ const logout = () => {
                                 </NavLink>
                             </div>
 
-                            <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
+                            <div v-if="hasStores" class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
                                 <NavLink :href="route('stocks.index')" :active="route().current('stocks.*')">
                                     Estoque
                                 </NavLink>
                             </div>
 
-                            <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
+                            <div v-if="hasStores" class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
                                 <NavLink :href="route('sales.index')" :active="route().current('sales.*')">
                                     Vendas
                                 </NavLink>
                             </div>
 
-                            <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
+                            <div v-if="hasStores" class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
                                 <NavLink :href="route('employers.index')" :active="route().current('employers.*')">
                                     Funcionários
                                 </NavLink>
                             </div>
 
-                            <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
+                            <div v-if="hasStores" class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
                                 <NavLink :href="route('suppliers.index')" :active="route().current('suppliers.*')">
                                     Fornecedores
                                 </NavLink>
                             </div>
 
-                            <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
+                            <div v-if="hasStores" class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
                                 <NavLink :href="route('customers.index')" :active="route().current('customers.*')">
                                     Clientes
                                 </NavLink>
                             </div>
                         </div>
                         
-                        <div v-if="!route().current('stores.*')" class="hidden sm:items-center space-x-8 sm:-my-px sm:ml-10 sm:flex">
+                        <div v-if="!route().current('stores.*') && $page.props.myStores.length > 1 && !route().current('*.create') && !route().current('*.edit')" class="hidden sm:items-center space-x-8 sm:-my-px sm:ml-10 sm:flex">
                             <!-- Settings Dropdown -->
                             <div class="ml-3 relative">
                                 <Dropdown align="right" width="48">
