@@ -37,9 +37,13 @@ class StoresController extends Controller
      */
     public function selectedStore(Request $request){
         $storeId = $request->id;
-        $store = Store::find($storeId);
 
-        session(['mySelectedStore' => $store]);
+        if(!empty($storeId)){
+            $store = Store::find($storeId);
+            session(['mySelectedStore' => $store]);
+        } else {
+            Session::forget('mySelectedStore');
+        }
 
         return redirect()->back();
     }

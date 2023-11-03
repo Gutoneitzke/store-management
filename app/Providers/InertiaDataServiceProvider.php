@@ -22,6 +22,7 @@ class InertiaDataServiceProvider extends ServiceProvider
                     ->where('users_has_stores.users_id', $userId)
                     ->select('stores.*')
                     ->get();
+                $myStores->push(['id' => 0, 'name' => 'Todos']);
 
                 return $myStores;
             } else {
