@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\City;
 use App\Models\Store;
 use App\Models\UserStore;
 use App\Traits\GetCountryStateCityTrait;

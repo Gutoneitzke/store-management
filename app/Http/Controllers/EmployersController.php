@@ -2,9 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\City;
-use App\Models\Country;
-use App\Models\State;
 use App\Models\Store;
 use App\Models\User;
 use App\Models\UserStore;
@@ -13,6 +10,7 @@ use App\Traits\HasSelectedStoreTrait;
 use App\Traits\MyStoresTrait;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Session;
 use Inertia\Inertia;
 
 class EmployersController extends Controller
@@ -147,7 +145,7 @@ class EmployersController extends Controller
         }
 
         try {
-            $user = User::where('id', $id)->update($userData);
+            User::where('id', $id)->update($userData);
 
             $userStoreData = [
                 'users_id'  => $request['user_original_store']['users_id'],
@@ -170,6 +168,19 @@ class EmployersController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        try {
+            $userStore = UserStore::where('users_id', $id)
+                            ->where('type', 'EMPLOYEE');
+            $userStore->delete();
+            
+            $employee = User::find($id);
+            $employee->delete();
+            
+            Session::flash('message', 'Employee Deleted Successfully');
+        } catch (\Exception $e) {
+            Session::flash('message', 'Error to delete');
+        }
+
+        return redirect(route('employers.index'));
     }
 }
