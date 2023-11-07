@@ -2,7 +2,7 @@
     <AppLayout title="Novo Funcionário">
         <PageCard>
             <div class="flex gp-2 items-center justify-between">
-                <h1 class="text-2xl">Novo Funcionário</h1>
+                <h1 class="text-2xl">Editando Funcionário: {{ form.name }}</h1>
                 <Link :href="route('employers.index')">
                     Voltar
                 </Link>
@@ -159,48 +159,46 @@
                     </div>
 
                     <div v-if="form.city" class="mt-4 grid">
-                <div class="flex gap-1 flex-col">
-                    <InputLabel for="address_complement" value="Complemento" />
-                    <TextInput
-                        id="address_complement"
-                        v-model="form.address_complement"
-                        type="text"
-                        class="mt-1 block w-full"
-                        autocomplete="address_complement"
-                    />
-                </div>
-            </div>
+                        <div class="flex gap-1 flex-col">
+                            <InputLabel for="address_complement" value="Complemento" />
+                            <TextInput
+                                id="address_complement"
+                                v-model="form.address_complement"
+                                type="text"
+                                class="mt-1 block w-full"
+                                autocomplete="address_complement"
+                            />
+                        </div>
+                    </div>
 
-            <div :class="['mt-4 grid gap-4', form.password ? 'grid-cols-2' : '']">
-                <div>
-                    <InputLabel for="password" value="Senha *" />
-                    <TextInput
-                        id="password"
-                        v-model="form.password"
-                        type="password"
-                        class="mt-1 block w-full"
-                        required
-                        autocomplete="new-password"
-                    />
-                </div>
+                    <div :class="['mt-4 grid gap-4', form.password ? 'grid-cols-2' : '']">
+                        <div>
+                            <InputLabel for="password" value="Senha" />
+                            <TextInput
+                                id="password"
+                                v-model="form.password"
+                                type="password"
+                                class="mt-1 block w-full"
+                                autocomplete="new-password"
+                            />
+                        </div>
 
-                <div v-if="form.password">
-                    <InputLabel for="password_confirmation" value="Confirmar Senha *" />
-                    <TextInput
-                        id="password_confirmation"
-                        v-model="form.password_confirmation"
-                        type="password"
-                        class="mt-1 block w-full"
-                        required
-                        autocomplete="new-password"
-                    />
-                    <span v-if="validPassword" class="invalid-field">As senhas devem ser iguais</span>
-                </div>
-            </div>
+                        <div v-if="form.password">
+                            <InputLabel for="password_confirmation" value="Confirmar Senha" />
+                            <TextInput
+                                id="password_confirmation"
+                                v-model="form.password_confirmation"
+                                type="password"
+                                class="mt-1 block w-full"
+                                autocomplete="new-password"
+                            />
+                            <span v-if="validPassword" class="invalid-field">As senhas devem ser iguais</span>
+                        </div>
+                    </div>
 
                     <div class="flex items-center justify-end mt-4">
                         <PrimaryButton class="mt-4" :class="{ 'opacity-25': processing }" :disabled="processing">
-                            Cadastrar
+                            Editar
                         </PrimaryButton>
                     </div>
                 </form>
@@ -225,27 +223,28 @@ export default {
         TextInput,
         PrimaryButton
     },
-    props: ['locales', 'stores'],
+    props: ['employee','locales', 'stores', 'userStore'],
     data() {
         return {
             form: {
-                name: '',
-                email: '',
-                gender: '',
-                cpf: '',
+                name: this.employee.name,
+                email: this.employee.email,
+                gender: this.employee.gender,
+                cpf: this.employee.cpf,
                 type: 'EMPLOYEE',
-                description: '',
+                description: this.employee.description,
                 country: '',
                 state: '',
-                city: '',
-                password: '',
-                address_street: '',
-                address_neighborhood: '',
-                address_number: '',
-                address_complement: '',
-                password: '',
+                city: this.employee.cities_id,
+                password: this.employee.password,
+                address_street: this.employee.address_street,
+                address_neighborhood: this.employee.address_neighborhood,
+                address_number: this.employee.address_number,
+                address_complement: this.employee.address_complement,
+                password: this.employee.password,
                 password_confirmation: '',
-                store_id: ''
+                store_id: this.userStore.stores_id,
+                user_original_store: this.userStore
             },
             genders: [
                 {value: 'M', label: 'Masculino'},
@@ -253,17 +252,29 @@ export default {
                 {value: 'O', label: 'Outro'},
             ],
             processing: false,
-            fieldsToValidate: ['name','email','password','cpf','type','gender','city','address_street','address_neighborhood','address_number', 'store_id']
+            fieldsToValidate: ['name','email','cpf','type','gender','city','address_street','address_neighborhood','address_number', 'store_id']
         }
+    },
+    mounted(){
+        let all = JSON.parse(JSON.stringify(Object.values(this.locales)));
+        all.forEach(a => {
+            Object.values(a.states).forEach(s => {
+                s.cities.forEach(c => {
+                    if(c.id == this.employee.cities_id){
+                        this.form.country = a;
+                        this.form.state = s;
+                    }
+                })
+            })
+        });
     },
     methods: {
         submit(){
+            this.processing = true;
             const formState = this.isValidForm();
             if(formState){
-                this.processing = true;
-                this.$inertia.post(route('employers.store'), this.form, {
-                    forceFormData: true,
-                    onSuccess: (data) => {
+                this.$inertia.put(route('employers.update', this.employee.id), this.form, {
+                    onSuccess: () => {
                         console.log('sucesso')
                     },
                     onError: (error) => {
@@ -285,9 +296,10 @@ export default {
                 }
             }
 
-            if(isValid && !this.validPassword){
+            if(isValid && (!this.validPassword || !this.form.password)){
                 return true;
             }
+            this.processing = false;
             return false;
         }
     },
