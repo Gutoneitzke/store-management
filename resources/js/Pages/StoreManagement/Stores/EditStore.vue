@@ -66,7 +66,7 @@
                         </div>
                     </div>
 
-                    <div v-if="form.state" class="mt-4 grid gap-4 grid-cols-2">
+                    <div v-if="form.state" :class="['mt-4 grid gap-4', form.city ? 'grid-cols-2' : '']">
                         <div class="flex gap-1 flex-col">
                             <InputLabel for="city" value="Cidade *" />
                             <select 
@@ -79,7 +79,7 @@
                             </select>
                         </div>
 
-                        <div>
+                        <div v-if="form.city">
                             <InputLabel for="description" value="Descrição" />
                             <TextInput
                                 id="description"
