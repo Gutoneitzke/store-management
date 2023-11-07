@@ -14,6 +14,7 @@ class UserStore extends Model
     protected $fillable = [
         'users_id',
         'stores_id',
+        'type'
     ];
 
     public function user()
