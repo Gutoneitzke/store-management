@@ -82,7 +82,8 @@ class StoresController extends Controller
 
             $userStoreData = [
                 'users_id'  => Auth::id(),
-                'stores_id' => $store->id
+                'stores_id' => $store->id,
+                'type'      => 'STORE_OWNER',
             ];
 
             $userStore = UserStore::create($userStoreData);
