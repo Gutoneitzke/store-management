@@ -11,8 +11,17 @@ import ResponsiveNavLink from '@/Components/ResponsiveNavLink.vue';
 defineProps({
     title: String,
     myStores: Array,
-    mySelectedStore: String
+    mySelectedStore: String,
 });
+
+const routesToShowOnlyMyOwnerStores = ['employers.*','test.*'];
+let showOnlyMyOwnerStores = false;
+
+routesToShowOnlyMyOwnerStores.forEach(e => {
+    if(route().current(e)){
+        showOnlyMyOwnerStores = true;
+    }
+})
 
 const showingNavigationDropdown = ref(false);
 
@@ -122,7 +131,8 @@ const logout = () => {
                                             :key="i" 
                                             :href="route('stores.selected',{id: s.id})" 
                                         >
-                                            {{ s.name }}
+                                            <s v-if="s.type == 'EMPLOYEE' && showOnlyMyOwnerStores" v-text="s.name" />
+                                            <span v-else v-text="s.name" />
                                         </DropdownLink>
                                     </template>
                                 </Dropdown>
