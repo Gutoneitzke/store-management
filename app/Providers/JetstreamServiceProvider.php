@@ -6,6 +6,7 @@ use App\Actions\Jetstream\DeleteUser;
 use App\Models\City;
 use App\Models\Country;
 use App\Models\State;
+use App\Traits\GetCountryStateCityTrait;
 use Illuminate\Support\ServiceProvider;
 use Inertia\Inertia;
 use Laravel\Fortify\Fortify;
@@ -13,6 +14,8 @@ use Laravel\Jetstream\Jetstream;
 
 class JetstreamServiceProvider extends ServiceProvider
 {
+    use GetCountryStateCityTrait;
+
     /**
      * Register any application services.
      */
@@ -32,9 +35,7 @@ class JetstreamServiceProvider extends ServiceProvider
 
         Fortify::registerView(function () {
             return Inertia::render('Auth/Register', [
-                'countries' => Country::all(),
-                'states' => State::all(),
-                'cities' => City::all(),
+                'locales' => $this->getLocales()
             ]);
         });
     }

@@ -9,9 +9,7 @@ import PrimaryButton from '@/Components/PrimaryButton.vue';
 import TextInput from '@/Components/TextInput.vue';
 
 const props = defineProps({
-    countries: Array,
-    states: Array,
-    cities: Array,
+    locales: Object
 });
 
 const form = useForm({
@@ -32,8 +30,7 @@ const form = useForm({
     terms: false,
 });
 
-const countries = props.countries
-const states = props.states
+const countries = Object.values(props.locales)
 
 const submit = () => {
     form.post(route('register'), {
@@ -114,11 +111,12 @@ const submit = () => {
                     <InputLabel for="country" value="País *" />
                     <select 
                         v-model="form.country" 
+                        @change="form.state = ''; form.city = ''"
                         id="country" 
                         class="border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm"
                         required
                     >
-                        <option v-for="c,i in countries" :key="i" :value="c.id" v-text="c.name"></option>
+                        <option v-for="c,i in countries" :key="i" :value="c" v-text="c.name"></option>
                     </select>
                     <InputError class="mt-2" :message="form.errors.country" />
                 </div>
@@ -127,11 +125,12 @@ const submit = () => {
                     <InputLabel for="state" value="Estado *" />
                     <select 
                         v-model="form.state" 
+                        @change="form.city = ''"
                         id="state" 
                         class="border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm"
                         required
                     >
-                        <option v-for="s,i in states" :key="i" :value="s.id" v-text="s.name"></option>
+                        <option v-for="s,i in form.country.states" :key="i" :value="s" v-text="s.name"></option>
                     </select>
                     <InputError class="mt-2" :message="form.errors.state" />
                 </div>
@@ -146,7 +145,7 @@ const submit = () => {
                         class="border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm"
                         required
                     >
-                        <option v-for="c,i in cities" :key="i" :value="c.id" v-text="c.name"></option>
+                        <option v-for="c,i in form.state.cities" :key="i" :value="c.id" v-text="c.name"></option>
                     </select>
                     <InputError class="mt-2" :message="form.errors.city" />
                 </div>
