@@ -187,10 +187,7 @@ export default {
                 }
             }
 
-            if(isValid){
-                return true;
-            }
-            return false;
+            return isValid;
         }
     }
 }
