@@ -43,6 +43,7 @@
                             <InputLabel for="country" value="País *" />
                             <select 
                                 v-model="form.country" 
+                                @change="form.state = ''; form.city = ''"
                                 id="country" 
                                 required 
                                 class="border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm"
@@ -55,6 +56,7 @@
                             <InputLabel for="state" value="Estado *" />
                             <select 
                                 v-model="form.state" 
+                                @change="form.city = ''"
                                 id="state" 
                                 required 
                                 class="border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm"
