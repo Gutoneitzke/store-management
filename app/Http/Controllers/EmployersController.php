@@ -8,6 +8,7 @@ use App\Models\State;
 use App\Models\Store;
 use App\Models\User;
 use App\Models\UserStore;
+use App\Traits\GetCountryStateCityTrait;
 use App\Traits\HasSelectedStoreTrait;
 use App\Traits\MyStoresTrait;
 use Illuminate\Http\Request;
@@ -18,6 +19,7 @@ class EmployersController extends Controller
 {
     use HasSelectedStoreTrait;
     use MyStoresTrait;
+    use GetCountryStateCityTrait;
 
     /**
      * Display a listing of the resource.
@@ -27,14 +29,14 @@ class EmployersController extends Controller
         $selectedStore = $this->getSelectedStore();
 
         if($selectedStore){
-            $employers = User::where('type', 'EMPLOYEE')
+            $employers = User::where('users.type', 'EMPLOYEE')
                             ->join('users_has_stores', 'users.id', '=', 'users_has_stores.users_id')
                             ->where('users_has_stores.stores_id', $selectedStore['id'])
                             ->where('users.id', '!=', auth()->id())
                             ->select('users.*')
                             ->get();
         } else {
-            $employers = User::where('type', 'EMPLOYEE')
+            $employers = User::where('users.type', 'EMPLOYEE')
                             ->join('users_has_stores', 'users.id', '=', 'users_has_stores.users_id')
                             ->whereIn('users_has_stores.stores_id', $this->getMyStoresTrait())
                             ->where('users.id', '!=', auth()->id())
@@ -55,10 +57,8 @@ class EmployersController extends Controller
         $stores = Store::whereIn('stores.id', $this->getMyStoresTrait())->get();
 
         return Inertia::render('StoreManagement/Employers/NewEmployer',[
-            'countries' => Country::all(),
-            'states'    => State::all(),
-            'cities'    => City::all(),
-            'stores'    => $stores
+            'locales' => $this->getLocales(),
+            'stores'  => $stores
         ]);
     }
 
@@ -85,7 +85,8 @@ class EmployersController extends Controller
 
             $userStoreData = [
                 'users_id'  => $user->id,
-                'stores_id' => $request['store_id']
+                'stores_id' => $request['store_id'],
+                'type'      => 'EMPLOYEE',
             ];
 
             UserStore::create($userStoreData);
@@ -101,7 +102,27 @@ class EmployersController extends Controller
      */
     public function edit(string $id)
     {
-        //
+        $employee = User::where('id',$id)
+                        ->where('type', 'EMPLOYEE')
+                        ->first();
+
+        if($employee->count() === 0){
+            return redirect(route('employer.index'));
+        } else {
+            $stores    = Store::whereIn('stores.id', $this->getMyStoresTrait())->get();
+            $userStore = UserStore::join('users', 'users.id', '=', 'users_has_stores.users_id')
+                            ->where('users.id', $id)
+                            ->where('users_has_stores.type', 'EMPLOYEE')
+                            ->select('users_has_stores.*')
+                            ->first();
+
+            return Inertia::render('StoreManagement/Employers/EditEmployer',[
+                'locales'   => $this->getLocales(),
+                'employee'  => $employee,
+                'stores'    => $stores,
+                'userStore' => $userStore
+            ]);
+        }
     }
 
     /**
@@ -109,7 +130,39 @@ class EmployersController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        $userData = [
+            'name'                 => $request['name'],
+            'email'                => $request['email'],
+            'cpf'                  => $request['cpf'],
+            'type'                 => $request['type'],
+            'cities_id'            => $request['city'],
+            'address_street'       => $request['address_street'],
+            'address_number'       => $request['address_number'],
+            'address_neighborhood' => $request['address_neighborhood'],
+            'address_complement'   => $request['address_complement'],
+        ];
+
+        if(!empty($request['password'])){
+            $userData['password'] = Hash::make($request['password']);
+        }
+
+        try {
+            $user = User::where('id', $id)->update($userData);
+
+            $userStoreData = [
+                'users_id'  => $request['user_original_store']['users_id'],
+                'stores_id' => $request['store_id']
+            ];
+
+            UserStore::where('users_id', $request['user_original_store']['users_id'])
+                    ->where('stores_id', $request['user_original_store']['stores_id'])
+                    ->where('type', 'EMPLOYEE')
+                    ->update($userStoreData);
+            
+            return redirect(route('employers.index'));
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', 'Falha ao editar funcionário(a)!');
+        }
     }
 
     /**
