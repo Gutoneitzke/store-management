@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\City;
 use App\Models\Store;
 use App\Models\UserStore;
+use App\Traits\GetCountryStateCityTrait;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -13,6 +14,8 @@ use Inertia\Inertia;
 
 class StoresController extends Controller
 {
+    use GetCountryStateCityTrait;
+
     /**
      * Display a listing of the resource.
      */
@@ -98,15 +101,15 @@ class StoresController extends Controller
      */
     public function edit(string $id)
     {
-        $cities = City::all();
+        $locales = $this->getLocales();
         $store = Store::where('id','=',$id)->first();
 
         if($store->count() === 0){
             return redirect(route('stores.index'));
         } else {
             return Inertia::render('StoreManagement/Stores/EditStore',[
-                'cities' => $cities,
-                'store'  => $store
+                'locales' => $locales,
+                'store'   => $store
             ]);
         }
     }
