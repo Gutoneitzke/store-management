@@ -38,7 +38,47 @@
                         </div>
                     </div>
 
-                    <div class="mt-4 grid gap-4 grid-cols-2">
+                    <div :class="['mt-4 grid gap-4', form.country ? 'grid-cols-2' : '']">
+                        <div class="flex gap-1 flex-col">
+                            <InputLabel for="country" value="País *" />
+                            <select 
+                                v-model="form.country"
+                                @change="form.state = ''; form.city = ''"
+                                id="country" 
+                                required 
+                                class="border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm"
+                            >
+                                <option v-for="c,i in locales" :key="i" :value="c" v-text="c.name"></option>
+                            </select>
+                        </div>
+
+                        <div v-if="form.country" class="flex gap-1 flex-col">
+                            <InputLabel for="state" value="Estado *" />
+                            <select 
+                                v-model="form.state"
+                                @change="form.city = ''"
+                                id="state" 
+                                required 
+                                class="border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm"
+                            >
+                                <option v-for="c,i in form.country.states" :key="i" :value="c" v-text="c.name"></option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div v-if="form.state" class="mt-4 grid gap-4 grid-cols-2">
+                        <div class="flex gap-1 flex-col">
+                            <InputLabel for="city" value="Cidade *" />
+                            <select 
+                                v-model="form.city" 
+                                id="city" 
+                                required 
+                                class="border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm"
+                            >
+                                <option v-for="c,i in form.state.cities" :key="i" :value="c.id" v-text="c.name"></option>
+                            </select>
+                        </div>
+
                         <div>
                             <InputLabel for="description" value="Descrição" />
                             <TextInput
@@ -49,18 +89,6 @@
                                 autofocus
                                 autocomplete="description"
                             />
-                        </div>
-
-                        <div class="flex gap-1 flex-col">
-                            <InputLabel for="city" value="Cidade *" />
-                            <select 
-                                v-model="form.city" 
-                                id="city" 
-                                required 
-                                class="border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm"
-                            >
-                                <option v-for="c,i in cities" :key="i" :value="c.id" v-text="c.name"></option>
-                            </select>
                         </div>
                     </div>
 
@@ -141,13 +169,15 @@ export default {
         TextInput,
         PrimaryButton
     },
-    props: ['cities'],
+    props: ['locales'],
     data() {
         return {
             form: {
                 name: '',
                 cnpj: '',
                 description: '',
+                country: '',
+                state: '',
                 city: '',
                 address_street: '',
                 address_neighborhood: '',

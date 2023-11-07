@@ -57,7 +57,7 @@ class StoresController extends Controller
     public function create()
     {
         return Inertia::render('StoreManagement/Stores/NewStore',[
-            'cities' => City::all()
+            'locales' => $this->getLocales()
         ]);
     }
 
@@ -101,14 +101,13 @@ class StoresController extends Controller
      */
     public function edit(string $id)
     {
-        $locales = $this->getLocales();
         $store = Store::where('id','=',$id)->first();
 
         if($store->count() === 0){
             return redirect(route('stores.index'));
         } else {
             return Inertia::render('StoreManagement/Stores/EditStore',[
-                'locales' => $locales,
+                'locales' => $this->getLocales(),
                 'store'   => $store
             ]);
         }
