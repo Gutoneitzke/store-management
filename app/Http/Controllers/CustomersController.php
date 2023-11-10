@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Customer;
 use App\Models\Store;
 use App\Traits\GetCountryStateCityTrait;
+use App\Traits\HasSelectedStoreTrait;
 use App\Traits\MyStoresTrait;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -13,15 +14,24 @@ class CustomersController extends Controller
 {
     use GetCountryStateCityTrait;
     use MyStoresTrait;
+    use HasSelectedStoreTrait;
 
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        $customers = Customer::with('city')
+        $selectedStore = $this->getSelectedStore();
+
+        if($selectedStore){
+            $customers = Customer::with('city')
+                ->where('stores_id', $selectedStore['id'])
+                ->get();
+        } else {
+            $customers = Customer::with('city')
                         ->whereIn('stores_id', $this->getMyStoresTrait())
                         ->get();
+        }
 
         return Inertia::render('StoreManagement/Customers/Customers',[
             'customers' => $customers
