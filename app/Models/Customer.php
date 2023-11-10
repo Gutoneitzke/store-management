@@ -14,6 +14,7 @@ class Customer extends Model
         'email',
         'cpf_cnpj',
         'gender',
+        'stores_id',
         'cities_id',
         'address_street',
         'address_number',
