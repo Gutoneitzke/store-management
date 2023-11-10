@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Product;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
@@ -12,7 +13,12 @@ class StocksController extends Controller
      */
     public function index()
     {
-        return Inertia::render('StoreManagement/Stocks');
+        $stock = Product::all();
+        dd($stock);
+
+        return Inertia::render('StoreManagement/Stocks/Stocks',[
+            'products' => $stock
+        ]);
     }
 
     /**

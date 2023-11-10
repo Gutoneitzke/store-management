@@ -12,7 +12,7 @@ class SalesController extends Controller
      */
     public function index()
     {
-        return Inertia::render('StoreManagement/Sales');
+        return Inertia::render('StoreManagement/Sales/Sales');
     }
 
     /**

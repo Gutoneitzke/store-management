@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Supplier;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
@@ -12,7 +13,12 @@ class SuppliersController extends Controller
      */
     public function index()
     {
-        return Inertia::render('StoreManagement/Suppliers');
+        $suppliers = Supplier::with('city')->get();
+        dd($suppliers);
+
+        return Inertia::render('StoreManagement/Suppliers/Suppliers',[
+            'suppliers' => $suppliers
+        ]);
     }
 
     /**

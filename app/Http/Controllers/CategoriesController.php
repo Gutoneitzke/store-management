@@ -12,7 +12,7 @@ class CategoriesController extends Controller
      */
     public function index()
     {
-        return Inertia::render('StoreManagement/Categories');
+        return Inertia::render('StoreManagement/Categories/Categories');
     }
 
     /**

@@ -101,7 +101,7 @@ class StoresController extends Controller
      */
     public function edit(string $id)
     {
-        $store = Store::where('id','=',$id)->first();
+        $store = Store::where('id', $id)->first();
 
         if($store->count() === 0){
             return redirect(route('stores.index'));
@@ -130,7 +130,7 @@ class StoresController extends Controller
         ];
 
         try {
-            $store = Store::where('id', '=', $id)->update($storeData);
+            $store = Store::where('id', $id)->update($storeData);
             
             if($store){
                 return redirect(route('stores.index'));
@@ -147,7 +147,7 @@ class StoresController extends Controller
     public function destroy(string $id)
     {
         try {
-            $userStore = UserStore::where('stores_id','=',$id);
+            $userStore = UserStore::where('stores_id', $id);
             $store = Store::find($id);
 
             $userStore->delete();
