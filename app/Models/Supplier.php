@@ -20,6 +20,7 @@ class Supplier extends Model
         'address_number',
         'address_neighborhood',
         'address_complement',
+        'stores_id',
     ];
 
     public function city()

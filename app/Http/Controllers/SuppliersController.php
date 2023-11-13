@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Store;
 use App\Models\Supplier;
 use App\Traits\GetCountryStateCityTrait;
 use App\Traits\HasSelectedStoreTrait;
 use App\Traits\MyStoresTrait;
+use Exception;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
@@ -42,7 +44,12 @@ class SuppliersController extends Controller
      */
     public function create()
     {
-        //
+        $myStores = Store::whereIn('id', $this->getMyStores())->get();
+
+        return Inertia::render('StoreManagement/Suppliers/NewSupplier',[
+            'locales'  => $this->getLocales(),
+            'myStores' => $myStores
+        ]);
     }
 
     /**
@@ -50,7 +57,30 @@ class SuppliersController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $supplierData = [
+            'name'                 => $request['name'],
+            'description'          => $request['description'],
+            'phone'                => $request['phone'],
+            'email'                => $request['email'],
+            'cpf_cnpj'             => $request['cpf_cnpj'],
+            'cities_id'            => $request['city'],
+            'address_street'       => $request['address_street'],
+            'address_number'       => $request['address_number'],
+            'address_neighborhood' => $request['address_neighborhood'],
+            'address_complement'   => $request['address_complement'],
+            'stores_id'            => $request['stores_id'],
+        ];
+
+        try {
+            $supplier = Supplier::create($supplierData);
+            
+            if($supplier){
+                return redirect(route('suppliers.index'));
+            }
+            new Exception();
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', 'Falha ao registrar o fornecedor!');
+        }
     }
 
     /**
