@@ -149,6 +149,6 @@ class SuppliersController extends Controller
             Session::flash('message', 'Error to delete');
         }
 
-        return redirect(route('customers.index'));
+        return redirect(route('suppliers.index'));
     }
 }
