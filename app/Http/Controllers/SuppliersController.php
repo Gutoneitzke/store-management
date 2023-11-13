@@ -84,19 +84,22 @@ class SuppliersController extends Controller
     }
 
     /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        //
-    }
-
-    /**
      * Show the form for editing the specified resource.
      */
     public function edit(string $id)
     {
-        //
+        $supplier = Supplier::where('id',$id)->first();
+        $myStores = Store::whereIn('id', $this->getMyStores())->get();
+
+        if($supplier->count() === 0){
+            return redirect(route('suppliers.index'));
+        } else {
+            return Inertia::render('StoreManagement/Suppliers/EditSupplier',[
+                'locales'  => $this->getLocales(),
+                'supplier' => $supplier,
+                'myStores' => $myStores
+            ]);
+        }
     }
 
     /**
@@ -104,7 +107,30 @@ class SuppliersController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        $supplierData = [
+            'name'                 => $request['name'],
+            'description'          => $request['description'],
+            'phone'                => $request['phone'],
+            'email'                => $request['email'],
+            'cpf_cnpj'             => $request['cpf_cnpj'],
+            'cities_id'            => $request['city'],
+            'address_street'       => $request['address_street'],
+            'address_number'       => $request['address_number'],
+            'address_neighborhood' => $request['address_neighborhood'],
+            'address_complement'   => $request['address_complement'],
+            'stores_id'            => $request['stores_id'],
+        ];
+
+        try {
+            $supplier = Supplier::where('id', $id)->update($supplierData);
+            
+            if($supplier){
+                return redirect(route('suppliers.index'));
+            }
+            new Exception();
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', 'Falha ao editar o fornecedor!');
+        }
     }
 
     /**

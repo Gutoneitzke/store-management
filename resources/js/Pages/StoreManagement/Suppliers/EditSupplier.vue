@@ -1,9 +1,9 @@
 <template>
-    <AppLayout title="Editar Loja">
+    <AppLayout title="Editar Fornecedor">
         <PageCard>
             <div class="flex gp-2 items-center justify-between">
-                <h1 class="text-2xl">Editando Loja: {{ store.name }}</h1>
-                <Link :href="route('stores.index')">
+                <h1 class="text-2xl">Editando Fornecedor: {{ supplier.name }}</h1>
+                <Link :href="route('suppliers.index')">
                     Voltar
                 </Link>
             </div>
@@ -25,16 +25,55 @@
                         </div>
 
                         <div>
-                            <InputLabel for="cnpj" value="CNPJ *" />
+                            <InputLabel for="cpf_cnpj" value="CPF ou CNPJ *" />
                             <TextInput
-                                id="cnpj"
-                                v-model="form.cnpj"
+                                id="cpf_cnpj"
+                                v-model="form.cpf_cnpj"
                                 type="text"
                                 class="mt-1 block w-full"
-                                required
                                 autofocus
-                                autocomplete="cnpj"
+                                autocomplete="cpf_cnpj"
                             />
+                        </div>
+                    </div>
+
+                    <div class="mt-4 grid">
+                        <InputLabel for="description" value="Descrição/Observação" />
+                        <TextInput
+                            id="description"
+                            v-model="form.description"
+                            type="text"
+                            class="mt-1 block w-full"
+                            required
+                            autofocus
+                            autocomplete="description"
+                        />
+                    </div>
+
+                    <div class="mt-4 grid gap-4 grid-cols-2">
+                        <div class="flex gap-1 flex-col">
+                            <InputLabel for="email" value="Email *" />
+                            <TextInput
+                                id="email"
+                                v-model="form.email"
+                                type="text"
+                                class="mt-1 block w-full"
+                                autofocus
+                                required
+                                autocomplete="email"
+                            />
+                        </div>
+
+                        <div class="flex gap-2 flex-col">
+                            <InputLabel for="store" value="Loja *" />
+                            <select 
+                                v-model="form.stores_id"
+                                id="store" 
+                                required 
+                                class="border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm"
+                            >
+                                <option v-for="c,i in myStores" :key="i" :value="c.id" v-text="c.name"></option>
+                            </select>
                         </div>
                     </div>
 
@@ -42,7 +81,7 @@
                         <div class="flex gap-1 flex-col">
                             <InputLabel for="country" value="País *" />
                             <select 
-                                v-model="form.country" 
+                                v-model="form.country"
                                 @change="form.state = ''; form.city = ''"
                                 id="country" 
                                 required 
@@ -55,7 +94,7 @@
                         <div v-if="form.country" class="flex gap-1 flex-col">
                             <InputLabel for="state" value="Estado *" />
                             <select 
-                                v-model="form.state" 
+                                v-model="form.state"
                                 @change="form.city = ''"
                                 id="state" 
                                 required 
@@ -80,25 +119,26 @@
                         </div>
 
                         <div v-if="form.city">
-                            <InputLabel for="description" value="Descrição" />
+                            <InputLabel for="phone" value="Telefone *" />
                             <TextInput
-                                id="description"
-                                v-model="form.description"
-                                type="text"
+                                id="phone"
+                                v-model="form.phone"
+                                type="number"
                                 class="mt-1 block w-full"
                                 autofocus
-                                autocomplete="description"
+                                autocomplete="phone"
                             />
                         </div>
                     </div>
 
                     <div v-if="form.city" :class="['mt-4 grid gap-4', form.city ? 'grid-cols-2' : '']">
                         <div class="flex gap-1 flex-col">
-                            <InputLabel for="address_street" value="Rua" />
+                            <InputLabel for="address_street" value="Rua *" />
                             <TextInput
                                 id="address_street"
                                 v-model="form.address_street"
                                 type="text"
+                                required
                                 class="mt-1 block w-full"
                                 autocomplete="address_street"
                             />
@@ -106,11 +146,12 @@
 
                         <div class="flex gap-1 flex-col">
                             <div class="flex gap-1 flex-col">
-                                <InputLabel for="address_neighborhood" value="Bairro" />
+                                <InputLabel for="address_neighborhood" value="Bairro *" />
                                 <TextInput
                                     id="address_neighborhood"
                                     v-model="form.address_neighborhood"
                                     type="text"
+                                    required
                                     class="mt-1 block w-full"
                                     autocomplete="address_neighborhood"
                                 />
@@ -120,11 +161,12 @@
 
                     <div v-if="form.city" :class="['mt-4 grid gap-4', form.city ? 'grid-cols-2' : '']">
                         <div class="flex gap-1 flex-col">
-                            <InputLabel for="address_number" value="Número" />
+                            <InputLabel for="address_number" value="Número *" />
                             <TextInput
                                 id="address_number"
                                 v-model="form.address_number"
                                 type="number"
+                                required
                                 class="mt-1 block w-full"
                                 autocomplete="address_street"
                             />
@@ -169,23 +211,26 @@ export default {
         TextInput,
         PrimaryButton
     },
-    props: ['locales','store'],
+    props: ['supplier','locales','myStores'],
     data() {
         return {
             form: {
-                name: this.store.name,
-                cnpj: this.store.cnpj,
-                description: this.store.description,
-                country: '',
-                state: '',
-                city: this.store.cities_id,
-                address_street: this.store.address_street,
-                address_neighborhood: this.store.address_neighborhood,
-                address_number: this.store.address_number,
-                address_complement: this.store.address_complement,
+                name: this.supplier.name,
+                description: this.supplier.description,
+                phone: this.supplier.phone,
+                email: this.supplier.email,
+                cpf_cnpj: this.supplier.cpf_cnpj,
+                country: this.supplier.country,
+                state: this.supplier.state,
+                city: this.supplier.cities_id,
+                address_street: this.supplier.address_street,
+                address_neighborhood: this.supplier.address_neighborhood,
+                address_number: this.supplier.address_number,
+                address_complement: this.supplier.address_complement,
+                stores_id: this.supplier.stores_id
             },
             processing: false,
-            fieldsToValidate: ['name','cnpj','city']
+            fieldsToValidate: ['name','email','phone','cpf_cnpj','city','address_street','address_number','address_neighborhood','stores_id']
         }
     },
     mounted(){
@@ -193,7 +238,7 @@ export default {
         all.forEach(a => {
             Object.values(a.states).forEach(s => {
                 s.cities.forEach(c => {
-                    if(c.id == this.store.cities_id){
+                    if(c.id == this.supplier.cities_id){
                         this.form.country = a;
                         this.form.state = s;
                     }
@@ -206,8 +251,8 @@ export default {
             this.processing = true;
             const formState = this.isValidForm();
             if(formState){
-                this.$inertia.put(route('stores.update', this.store.id), this.form, {
-                    onSuccess: () => {
+                this.$inertia.put(route('suppliers.update', this.supplier.id), this.form, {
+                    onSuccess: (data) => {
                         console.log('sucesso')
                     },
                     onError: (error) => {
@@ -234,7 +279,3 @@ export default {
     }
 }
 </script>
-
-<style lang="scss" scoped>
-    
-</style>
