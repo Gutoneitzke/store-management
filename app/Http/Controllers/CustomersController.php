@@ -8,6 +8,7 @@ use App\Traits\GetCountryStateCityTrait;
 use App\Traits\HasSelectedStoreTrait;
 use App\Traits\MyStoresTrait;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Session;
 use Inertia\Inertia;
 
 class CustomersController extends Controller
@@ -135,6 +136,16 @@ class CustomersController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        try {
+            $customer = Customer::find($id);
+
+            $customer->delete();
+            
+            Session::flash('message', 'Customer Deleted Successfully');
+        } catch (\Exception $e) {
+            Session::flash('message', 'Error to delete');
+        }
+
+        return redirect(route('customers.index'));
     }
 }
