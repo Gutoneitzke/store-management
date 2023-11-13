@@ -109,7 +109,6 @@
                             <select 
                                 v-model="form.gender" 
                                 id="gender" 
-                                required
                                 class="border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm"
                             >
                                 <option v-for="g,i in genders" :key="i" :value="g.value" v-text="g.label"></option>
@@ -220,7 +219,7 @@ export default {
                 {value: 'O', label: 'Outro'},
             ],
             processing: false,
-            fieldsToValidate: ['name','gender','city','address_street','address_number','address_neighborhood','stores_id']
+            fieldsToValidate: ['name','city','address_street','address_number','address_neighborhood','stores_id']
         }
     },
     methods: {
