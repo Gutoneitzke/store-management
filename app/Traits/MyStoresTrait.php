@@ -9,7 +9,7 @@ trait MyStoresTrait {
     /**
      * @return array
      */
-    public function getMyStoresTrait() {
+    public function getMyStores() {
         return UserStore::where('users_id', auth()->id())->pluck('stores_id')->toArray();
     }
   

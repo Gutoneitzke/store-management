@@ -3,18 +3,34 @@
 namespace App\Http\Controllers;
 
 use App\Models\Supplier;
+use App\Traits\GetCountryStateCityTrait;
+use App\Traits\HasSelectedStoreTrait;
+use App\Traits\MyStoresTrait;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
 class SuppliersController extends Controller
 {
+    use GetCountryStateCityTrait;
+    use MyStoresTrait;
+    use HasSelectedStoreTrait;
+    
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        $suppliers = Supplier::with('city')->get();
-        dd($suppliers);
+        $selectedStore = $this->getSelectedStore();
+
+        if($selectedStore){
+            $suppliers = Supplier::with('city')
+                ->where('stores_id', $selectedStore['id'])
+                ->get();
+        } else {
+            $suppliers = Supplier::with('city')
+                        ->whereIn('stores_id', $this->getMyStores())
+                        ->get();
+        }
 
         return Inertia::render('StoreManagement/Suppliers/Suppliers',[
             'suppliers' => $suppliers

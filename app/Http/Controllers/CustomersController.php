@@ -30,7 +30,7 @@ class CustomersController extends Controller
                 ->get();
         } else {
             $customers = Customer::with('city')
-                        ->whereIn('stores_id', $this->getMyStoresTrait())
+                        ->whereIn('stores_id', $this->getMyStores())
                         ->get();
         }
 
@@ -44,7 +44,7 @@ class CustomersController extends Controller
      */
     public function create()
     {
-        $myStores = Store::whereIn('id', $this->getMyStoresTrait())->get();
+        $myStores = Store::whereIn('id', $this->getMyStores())->get();
 
         return Inertia::render('StoreManagement/Customers/NewCustomer',[
             'locales'  => $this->getLocales(),
@@ -88,7 +88,7 @@ class CustomersController extends Controller
     public function edit(string $id)
     {
         $customer = Customer::where('id',$id)->first();
-        $myStores = Store::whereIn('id', $this->getMyStoresTrait())->get();
+        $myStores = Store::whereIn('id', $this->getMyStores())->get();
 
         if($customer->count() === 0){
             return redirect(route('customers.index'));

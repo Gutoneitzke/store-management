@@ -36,7 +36,7 @@ class EmployersController extends Controller
         } else {
             $employers = User::where('users.type', 'EMPLOYEE')
                             ->join('users_has_stores', 'users.id', '=', 'users_has_stores.users_id')
-                            ->whereIn('users_has_stores.stores_id', $this->getMyStoresTrait())
+                            ->whereIn('users_has_stores.stores_id', $this->getMyStores())
                             ->where('users.id', '!=', auth()->id())
                             ->select('users.*')
                             ->get();
@@ -52,7 +52,7 @@ class EmployersController extends Controller
      */
     public function create()
     {
-        $stores = Store::whereIn('stores.id', $this->getMyStoresTrait())->get();
+        $stores = Store::whereIn('stores.id', $this->getMyStores())->get();
 
         return Inertia::render('StoreManagement/Employers/NewEmployer',[
             'locales' => $this->getLocales(),
@@ -107,7 +107,7 @@ class EmployersController extends Controller
         if($employee->count() === 0){
             return redirect(route('employer.index'));
         } else {
-            $stores    = Store::whereIn('stores.id', $this->getMyStoresTrait())->get();
+            $stores    = Store::whereIn('stores.id', $this->getMyStores())->get();
             $userStore = UserStore::join('users', 'users.id', '=', 'users_has_stores.users_id')
                             ->where('users.id', $id)
                             ->where('users_has_stores.type', 'EMPLOYEE')
