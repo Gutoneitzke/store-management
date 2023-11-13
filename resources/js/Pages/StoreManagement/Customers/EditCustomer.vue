@@ -50,7 +50,7 @@
                             />
                         </div>
 
-                        <div class="flex gap-1 flex-col">
+                        <div class="flex gap-2 flex-col">
                             <InputLabel for="store" value="Loja *" />
                             <select 
                                 v-model="form.stores_id"
@@ -105,7 +105,7 @@
                         </div>
 
                         <div v-if="form.city" class="flex gap-1 flex-col">
-                            <InputLabel for="gender" value="Sexo *" />
+                            <InputLabel for="gender" value="Sexo" />
                             <select 
                                 v-model="form.gender" 
                                 id="gender" 
