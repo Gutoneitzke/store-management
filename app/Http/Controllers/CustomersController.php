@@ -141,7 +141,7 @@ class CustomersController extends Controller
 
             $customer->delete();
             
-            Session::flash('message', 'Customer Deleted Successfully');
+            Session::flash('message', 'Cliente deletado com sucesso');
         } catch (\Exception $e) {
             Session::flash('message', 'Error to delete');
         }

@@ -9,6 +9,7 @@ use App\Traits\HasSelectedStoreTrait;
 use App\Traits\MyStoresTrait;
 use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Session;
 use Inertia\Inertia;
 
 class SuppliersController extends Controller
@@ -138,6 +139,16 @@ class SuppliersController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        try {
+            $supplier = Supplier::find($id);
+
+            $supplier->delete();
+            
+            Session::flash('message', 'Fornecedor deletado com sucesso');
+        } catch (\Exception $e) {
+            Session::flash('message', 'Error to delete');
+        }
+
+        return redirect(route('customers.index'));
     }
 }
