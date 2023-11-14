@@ -108,12 +108,4 @@ class CategoriesController extends Controller
             return redirect()->back()->with('error', 'Falha ao editar a categoria!');
         }
     }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        //
-    }
 }
