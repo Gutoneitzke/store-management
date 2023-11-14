@@ -2,17 +2,35 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Category;
+use App\Traits\GetCountryStateCityTrait;
+use App\Traits\HasSelectedStoreTrait;
+use App\Traits\MyStoresTrait;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
 class CategoriesController extends Controller
 {
+    use GetCountryStateCityTrait;
+    use MyStoresTrait;
+    use HasSelectedStoreTrait;
+
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        return Inertia::render('StoreManagement/Categories/Categories');
+        $selectedStore = $this->getSelectedStore();
+
+        if($selectedStore){
+            $categories = Category::where('stores_id', $selectedStore['id'])->get();
+        } else {
+            $categories = Category::whereIn('stores_id', $this->getMyStores())->get();
+        }
+
+        return Inertia::render('StoreManagement/Categories/Categories',[
+            'categories' => $categories
+        ]);
     }
 
     /**
