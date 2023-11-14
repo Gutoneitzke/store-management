@@ -75,7 +75,7 @@ const logout = () => {
                             </div>
 
                             <div v-if="hasStores" class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
-                                <NavLink :href="route('stocks.index')" :active="route().current('stocks.*')">
+                                <NavLink :href="route('stocks.index')" :active="route().current('stocks.*') || route().current('suppliers.*') || route().current('categories.*')">
                                     Estoque
                                 </NavLink>
                             </div>
@@ -89,12 +89,6 @@ const logout = () => {
                             <div v-if="hasStores" class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
                                 <NavLink :href="route('employers.index')" :active="route().current('employers.*')">
                                     Funcionários
-                                </NavLink>
-                            </div>
-
-                            <div v-if="hasStores" class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
-                                <NavLink :href="route('suppliers.index')" :active="route().current('suppliers.*')">
-                                    Fornecedores
                                 </NavLink>
                             </div>
 
