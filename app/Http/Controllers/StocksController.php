@@ -4,8 +4,13 @@ namespace App\Http\Controllers;
 
 use App\Models\Category;
 use App\Models\Product;
+use App\Models\ProductEntry;
+use App\Models\ProductHasCategory;
+use App\Models\ProductHasEntry;
 use App\Models\Store;
 use App\Models\Supplier;
+use App\Models\SupplierHasProduct;
+use App\Models\SupplierProduct;
 use App\Traits\GenerateRandomNumberTrait;
 use App\Traits\GetCountryStateCityTrait;
 use App\Traits\HasSelectedStoreTrait;
@@ -62,31 +67,57 @@ class StocksController extends Controller
     public function store(Request $request)
     {
         try{
+            // product
             if($request['newProduct']['status'] == '1' && $request['newProduct']['product_id'] == null){
                 $productData = [
                     'name'        => $request['name'],
-                    'description' => $request['description'],
                     'total_price' => $request['qty'] * $request['unity_price'],
                     'qty_stock'   => $request['qty'],
                     'stores_id'   => $request['stores_id'],
                     'code'        => $this->generateRandomNumber()
                 ];
     
-                $productId  = Product::create($productData);
+                $product  = Product::create($productData);
                 
             } else {
-                $productData = [];
-                $productId = $request['newProduct']['product_id'];
+                $product = Product::find($request['newProduct']['product_id']);
             }
+
+            // product_entries
+            $productEntriesData = [
+                'description' => $request['description'],
+                'qty'         => $request['qty'],
+                'total_price' => $request['qty'] * $request['unity_price'],
+                'type'        => $request['type_entrie']
+            ];
+            $productEntries = ProductEntry::create($productEntriesData);
+
+            // products_has_entries
+            $productHasEntriesData = [
+                'products_id' => $product->id,
+                'entries_id'  => $productEntries->id,
+                'unity_price' => $request['unity_price']
+            ];
+            ProductHasEntry::create($productHasEntriesData);
+
+            // products_has_categories
+            $productHasCategoriesData = [
+                'products_id'   => $product->id,
+                'categories_id' => $request['category_id'],
+            ];
+            ProductHasCategory::create($productHasCategoriesData);
+
+            // supplier_has_products
+            $supplierHasProductsData = [
+                'supplier_id' => $request['suppliers_id'],
+                'products_id' => $product->id,
+            ];
+            SupplierHasProduct::create($supplierHasProductsData);
 
         } catch (\Exception $e) {
             return redirect()->back()->with('error', 'Falha ao registrar o produto!');
         }
-        // products -> ok
-        // product_entries -> --
-        // products_has_entries
-        // products_has_categories
-        // supplier_has_products
+        return redirect(route('stocks.index'));
     }
 
     /**
