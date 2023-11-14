@@ -44,7 +44,6 @@
                             v-model="form.description"
                             type="text"
                             class="mt-1 block w-full"
-                            autofocus
                             autocomplete="description"
                         />
                     </div>

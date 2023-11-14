@@ -32,7 +32,6 @@
                                 type="text"
                                 class="mt-1 block w-full"
                                 required
-                                autofocus
                                 autocomplete="cnpj"
                             />
                         </div>
@@ -86,7 +85,6 @@
                                 v-model="form.description"
                                 type="text"
                                 class="mt-1 block w-full"
-                                autofocus
                                 autocomplete="description"
                             />
                         </div>

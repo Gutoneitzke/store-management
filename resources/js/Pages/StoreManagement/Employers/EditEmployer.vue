@@ -32,7 +32,6 @@
                                 type="text"
                                 class="mt-1 block w-full"
                                 required
-                                autofocus
                                 autocomplete="cpf"
                             />
                         </div>

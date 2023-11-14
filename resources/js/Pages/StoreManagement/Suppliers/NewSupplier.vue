@@ -31,7 +31,6 @@
                                 v-model="form.cpf_cnpj"
                                 type="text"
                                 class="mt-1 block w-full"
-                                autofocus
                                 autocomplete="cpf_cnpj"
                             />
                         </div>
@@ -45,7 +44,6 @@
                             type="text"
                             class="mt-1 block w-full"
                             required
-                            autofocus
                             autocomplete="description"
                         />
                     </div>
@@ -58,7 +56,6 @@
                                 v-model="form.email"
                                 type="text"
                                 class="mt-1 block w-full"
-                                autofocus
                                 required
                                 autocomplete="email"
                             />
@@ -125,7 +122,6 @@
                                 v-model="form.phone"
                                 type="number"
                                 class="mt-1 block w-full"
-                                autofocus
                                 autocomplete="phone"
                             />
                         </div>
