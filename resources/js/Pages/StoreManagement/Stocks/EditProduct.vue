@@ -215,6 +215,9 @@ export default {
                         this.processing = false;
                     }
                 });
+            } else {
+                alert('Campos inválidos!');
+                this.processing = false;
             }
         },
         isValidForm(){
