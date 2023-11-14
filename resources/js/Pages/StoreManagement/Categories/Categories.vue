@@ -1,13 +1,18 @@
 <template>
-    <AppLayout title="Lojas">
+    <AppLayout title="Categorias">
         <PageCard>
             <div class="flex gp-2 items-center justify-between">
                 <h1 class="text-2xl">Minhas categorias</h1>
-                <Link :href="route('stores.create')">
-                    <PrimaryButton>
-                        NOVA CATEGORIA
-                    </PrimaryButton>
-                </Link>
+                <div class="flex items-center gap-4">
+                    <Link :href="route('stocks.index')">
+                        Voltar
+                    </Link>
+                    <Link :href="route('suppliers.create')">
+                        <PrimaryButton>
+                            NOVA CATEGORIA
+                        </PrimaryButton>
+                    </Link>
+                </div>
             </div>
             <table class="table-auto w-full mt-8 divide-y divide-gray-200">
                 <thead>

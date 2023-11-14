@@ -3,11 +3,16 @@
         <PageCard>
             <div class="flex gp-2 items-center justify-between">
                 <h1 class="text-2xl">Meus fornecedores</h1>
-                <Link :href="route('suppliers.create')">
-                    <PrimaryButton>
-                        NOVO FORNECEDOR
-                    </PrimaryButton>
-                </Link>
+                <div class="flex items-center gap-4">
+                    <Link :href="route('stocks.index')">
+                        Voltar
+                    </Link>
+                    <Link :href="route('suppliers.create')">
+                        <PrimaryButton>
+                            NOVO FORNECEDOR
+                        </PrimaryButton>
+                    </Link>
+                </div>
             </div>
             <table class="table-auto w-full mt-8 divide-y divide-gray-200">
                 <thead>
