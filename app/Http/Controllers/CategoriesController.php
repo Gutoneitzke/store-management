@@ -3,9 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Models\Category;
+use App\Models\Store;
 use App\Traits\GetCountryStateCityTrait;
 use App\Traits\HasSelectedStoreTrait;
 use App\Traits\MyStoresTrait;
+use Exception;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
@@ -38,7 +40,11 @@ class CategoriesController extends Controller
      */
     public function create()
     {
-        //
+        $myStores = Store::whereIn('id', $this->getMyStores())->get();
+
+        return Inertia::render('StoreManagement/Categories/NewCategory',[
+            'myStores' => $myStores
+        ]);
     }
 
     /**
@@ -46,15 +52,22 @@ class CategoriesController extends Controller
      */
     public function store(Request $request)
     {
-        //
-    }
+        $categoryData = [
+            'name'        => $request['name'],
+            'description' => $request['description'],
+            'stores_id'   => $request['stores_id'],
+        ];
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        //
+        try {
+            $category = Category::create($categoryData);
+            
+            if($category){
+                return redirect(route('categories.index'));
+            }
+            new Exception();
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', 'Falha ao registrar a categoria!');
+        }
     }
 
     /**
