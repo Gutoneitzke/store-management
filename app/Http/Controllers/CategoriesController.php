@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Models\Category;
 use App\Models\Store;
-use App\Traits\GetCountryStateCityTrait;
 use App\Traits\HasSelectedStoreTrait;
 use App\Traits\MyStoresTrait;
 use Exception;
@@ -13,7 +12,6 @@ use Inertia\Inertia;
 
 class CategoriesController extends Controller
 {
-    use GetCountryStateCityTrait;
     use MyStoresTrait;
     use HasSelectedStoreTrait;
 
@@ -75,7 +73,17 @@ class CategoriesController extends Controller
      */
     public function edit(string $id)
     {
-        //
+        $category = Category::where('id',$id)->first();
+        $myStores = Store::whereIn('id', $this->getMyStores())->get();
+
+        if($category->count() === 0){
+            return redirect(route('categories.index'));
+        } else {
+            return Inertia::render('StoreManagement/Categories/EditCategory',[
+                'category' => $category,
+                'myStores' => $myStores
+            ]);
+        }
     }
 
     /**
@@ -83,7 +91,22 @@ class CategoriesController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        $categoryData = [
+            'name'        => $request['name'],
+            'description' => $request['description'],
+            'stores_id'   => $request['stores_id'],
+        ];
+
+        try {
+            $category = Category::where('id', $id)->update($categoryData);
+            
+            if($category){
+                return redirect(route('categories.index'));
+            }
+            new Exception();
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', 'Falha ao editar a categoria!');
+        }
     }
 
     /**

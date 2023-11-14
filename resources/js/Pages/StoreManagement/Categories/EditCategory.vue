@@ -51,7 +51,7 @@
 
                     <div class="flex items-center justify-end mt-4">
                         <PrimaryButton class="mt-4" :class="{ 'opacity-25': processing }" :disabled="processing">
-                            Cadastrar
+                            Editar
                         </PrimaryButton>
                     </div>
                 </form>
@@ -80,9 +80,9 @@ export default {
     data() {
         return {
             form: {
-                name: '',
-                description: '',
-                stores_id: '',
+                name: this.category.name,
+                description: this.category.description,
+                stores_id: this.category.stores_id,
             },
             processing: false,
             fieldsToValidate: ['name','stores_id']
@@ -93,7 +93,7 @@ export default {
             this.processing = true;
             const formState = this.isValidForm();
             if(formState){
-                this.$inertia.put(route('categories.update', this.supplier.id), this.form, {
+                this.$inertia.put(route('categories.update', this.category.id), this.form, {
                     onSuccess: (data) => {
                         console.log('sucesso')
                     },
