@@ -10,7 +10,6 @@ use App\Models\ProductHasEntry;
 use App\Models\Store;
 use App\Models\Supplier;
 use App\Models\SupplierHasProduct;
-use App\Models\SupplierProduct;
 use App\Traits\GenerateRandomNumberTrait;
 use App\Traits\GetCountryStateCityTrait;
 use App\Traits\HasSelectedStoreTrait;
@@ -48,16 +47,18 @@ class StocksController extends Controller
      */
     public function create()
     {
-        $products = Product::whereIn('stores_id', $this->getMyStores())->get();
-        $categories = Category::whereIn('stores_id', $this->getMyStores())->get();
-        $suppliers = Supplier::whereIn('stores_id', $this->getMyStores())->get();
-        $myStores = Store::whereIn('id', $this->getMyStores())->get();
+        $products              = Product::whereIn('stores_id', $this->getMyStores())->get();
+        $productsHasCategories = ProductHasCategory::whereIn('products_id', $products->pluck('id')->toArray())->get();
+        $categories            = Category::whereIn('stores_id', $this->getMyStores())->get();
+        $suppliers             = Supplier::whereIn('stores_id', $this->getMyStores())->get();
+        $myStores              = Store::whereIn('id', $this->getMyStores())->get();
 
         return Inertia::render('StoreManagement/Stocks/NewProduct',[
-            'products'   => $products,
-            'categories' => $categories,
-            'suppliers'  => $suppliers,
-            'myStores'   => $myStores
+            'products'              => $products,
+            'productsHasCategories' => $productsHasCategories,
+            'categories'            => $categories,
+            'suppliers'             => $suppliers,
+            'myStores'              => $myStores
         ]);
     }
 
@@ -121,7 +122,10 @@ class StocksController extends Controller
                 'entries_id'  => $productEntries->id,
                 'unity_price' => $request['unity_price']
             ];
-            ProductHasEntry::create($productHasEntriesData);
+
+            for($i = 0; $i < $request['qty']; $i++){
+                ProductHasEntry::create($productHasEntriesData);
+            }
 
         } catch (\Exception $e) {
             return redirect()->back()->with('error', 'Falha ao registrar o produto!');
