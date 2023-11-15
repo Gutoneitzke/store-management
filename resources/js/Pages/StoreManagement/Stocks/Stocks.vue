@@ -37,12 +37,17 @@
                         <th 
                             class="px-6 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider"
                         >
-                            CNPJ
+                            Preço Total
                         </th>
                         <th 
                             class="px-6 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider"
                         >
-                            Cidade
+                            Quantidade em estoque
+                        </th>
+                        <th 
+                            class="px-6 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider"
+                        >
+                            Código do produto
                         </th>
                         <th
                             class="px-6 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider"
@@ -61,11 +66,15 @@
                         ></td>
                         <td 
                             class="px-6 py-4 whitespace-no-wrap" 
-                            v-text="s.cnpj"
+                            v-text="'R$ '+formatValue(s.total_price)"
                         ></td>
                         <td 
                             class="px-6 py-4 whitespace-no-wrap" 
-                            v-text="s.city"
+                            v-text="s.qty_stock"
+                        ></td>
+                        <td 
+                            class="px-6 py-4 whitespace-no-wrap" 
+                            v-text="s.code"
                         ></td>
                         <td>
                             <div class="flex gap-4 justify-center">
@@ -96,6 +105,12 @@ export default {
         Link
     },
     props: ['products'],
+    methods: {
+        formatValue(data){
+            const valorFormatado = parseFloat(data).toFixed(2).replace('.', ',');
+            return valorFormatado.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+        }
+    }
 }
 </script>
 
