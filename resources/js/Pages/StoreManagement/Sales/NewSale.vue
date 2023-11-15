@@ -104,7 +104,7 @@
                                 <TextInput
                                     id="unity_price"
                                     v-model="p.unity_price"
-                                    type="number"
+                                    type="text"
                                     class="disabled mt-1 block w-full"
                                     required
                                     disabled
@@ -120,7 +120,7 @@
                         </PrimaryButton>
                     </div>
 
-                    <div v-if="form.productsToSell[0].unity_price != '0'" :class="['mt-4 grid gap-4', form.discount != '0' && form.discount != null ? 'grid-cols-3' : 'grid-cols-2']">
+                    <div v-if="form.productsToSell[0].unity_price != '0'" :class="['mt-4 grid gap-4', form.discount != '0' && !form.discount == false ? 'grid-cols-3' : 'grid-cols-2']">
                         <div class="flex gap-1 flex-col">
                             <InputLabel for="discount" value="Porcentagem de desconto  *" />
                             <TextInput
@@ -140,11 +140,11 @@
                                 class="mt-1 block w-full"
                                 autocomplete="total_price"
                                 disabled
-                                :value="'R$ '+getTotalFinalToSell"
+                                :value="'R$ '+formatValue(getTotalFinalToSell)"
                             />
                         </div>
 
-                        <div v-if="form.discount != '0' && form.discount != null" class="flex gap-1 flex-col">
+                        <div v-if="form.discount != '0' && !form.discount == false" class="flex gap-1 flex-col">
                             <InputLabel for="total_price" value="Valor final da venda com desconto" />
                             <TextInput
                                 id="total_price"
@@ -152,7 +152,7 @@
                                 class="mt-1 block w-full"
                                 autocomplete="total_price"
                                 disabled
-                                :value="'R$ '+getTotalFinalToSellWithDiscount"
+                                :value="'R$ '+formatValue(getTotalFinalToSellWithDiscount)"
                             />
                         </div>
                     </div>
@@ -266,6 +266,10 @@ export default {
             }];
             this.form.discount = '0';
         },
+        formatValue(data){
+            const valorFormatado = parseFloat(data).toFixed(2).replace('.', ',');
+            return valorFormatado.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+        },
         addMoreProductsToSell(){
             this.form.productsToSell.push({
                     products_id: '',
@@ -274,7 +278,8 @@ export default {
                 });
         },
         getUnityPrice(data){
-            data.unity_price = this.productsHasEntries.find(x => x.products_id == data.products_id).unity_price;
+            const up = this.productsHasEntries.find(x => x.products_id == data.products_id).unity_price;
+            data.unity_price = 'R$ '+this.formatValue(up);
         }
     },
     computed: {
