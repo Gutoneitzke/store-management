@@ -68,7 +68,8 @@ class StocksController extends Controller
     {
         try{
             // product
-            if($request['newProduct']['status'] == '1' && $request['newProduct']['product_id'] == null){
+            if($request['newProduct']['status'] == '1'){
+                // new product
                 $productData = [
                     'name'        => $request['name'],
                     'total_price' => $request['qty'] * $request['unity_price'],
@@ -77,10 +78,32 @@ class StocksController extends Controller
                     'code'        => $this->generateRandomNumber()
                 ];
     
-                $product  = Product::create($productData);
+                $product = Product::create($productData);
+
+                // products_has_categories
+                $productHasCategoriesData = [
+                    'products_id'   => $product->id,
+                    'categories_id' => $request['category_id'],
+                ];
+                ProductHasCategory::create($productHasCategoriesData);
+
+                // supplier_has_products
+                $supplierHasProductsData = [
+                    'supplier_id' => $request['suppliers_id'],
+                    'products_id' => $product->id,
+                ];
+                SupplierHasProduct::create($supplierHasProductsData);
                 
             } else {
+                // add and update in exists product
                 $product = Product::find($request['newProduct']['product_id']);
+
+                $productData = [
+                    'total_price' => $product->total_price + ($request['qty'] * $request['unity_price']),
+                    'qty_stock'   => $product->qty_stock + $request['qty'],
+                ];
+
+                $product->update($productData);
             }
 
             // product_entries
@@ -99,20 +122,6 @@ class StocksController extends Controller
                 'unity_price' => $request['unity_price']
             ];
             ProductHasEntry::create($productHasEntriesData);
-
-            // products_has_categories
-            $productHasCategoriesData = [
-                'products_id'   => $product->id,
-                'categories_id' => $request['category_id'],
-            ];
-            ProductHasCategory::create($productHasCategoriesData);
-
-            // supplier_has_products
-            $supplierHasProductsData = [
-                'supplier_id' => $request['suppliers_id'],
-                'products_id' => $product->id,
-            ];
-            SupplierHasProduct::create($supplierHasProductsData);
 
         } catch (\Exception $e) {
             return redirect()->back()->with('error', 'Falha ao registrar o produto!');
