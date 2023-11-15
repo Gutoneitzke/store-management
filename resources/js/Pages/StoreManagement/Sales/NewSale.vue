@@ -279,7 +279,7 @@ export default {
         },
         getUnityPrice(data){
             const up = this.productsHasEntries.find(x => x.products_id == data.products_id).unity_price;
-            data.unity_price = this.formatValue(up);
+            data.unity_price = up;
         }
     },
     computed: {

@@ -7,9 +7,9 @@ use App\Models\Customer;
 use App\Models\Product;
 use App\Models\ProductHasCategory;
 use App\Models\ProductHasEntry;
+use App\Models\ProductHasSale;
 use App\Models\ProductOutput;
 use App\Models\Store;
-use App\Models\Supplier;
 use App\Traits\HasSelectedStoreTrait;
 use App\Traits\MyStoresTrait;
 use Illuminate\Http\Request;
@@ -69,7 +69,44 @@ class SalesController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        try{
+            // product_entries
+            $totalValue = 0;
+            $totalQty = 0;
+            for($i = 0; $i < count($request['productsToSell']); $i++)
+            {
+                $totalValue += $request['productsToSell'][$i]['unity_price'] * $request['productsToSell'][$i]['qty'];
+                $totalQty   += $request['productsToSell'][$i]['qty'];
+            }
+            
+            if(!empty($request['discount'])){
+                $totalValue = $totalValue - ($totalValue * $request['discount'])/100;
+            }
+
+            $productOutputData = [
+                'description'  => $request['description'],
+                'qty'          => $totalQty,
+                'total_price'  => $totalValue,
+                'customers_id' => $request['customers_id'],
+                // 'discount'     => $request['discount'],
+            ];
+            $productOutput = ProductOutput::create($productOutputData);
+            
+            // products_has_sales
+            for($i = 0; $i < count($request['productsToSell']); $i++){
+                for($y = 0; $y < $request['productsToSell'][$i]['qty']; $y++){
+                    $productsHasSalesData = [
+                        'products_id' => $request['productsToSell'][$i]['products_id'],
+                        'sales_id'    => $productOutput->id,
+                        'unity_price' => $request['productsToSell'][$i]['unity_price'],
+                    ];
+                    ProductHasSale::create($productsHasSalesData);
+                }
+            }
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', 'Falha ao registrar a venda!');
+        }
+        return redirect(route('sales.index'));
     }
 
     /**
