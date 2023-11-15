@@ -69,9 +69,10 @@
                             v-text="'R$ '+formatValue(s.total_price)"
                         ></td>
                         <td 
-                            class="px-6 py-4 whitespace-no-wrap" 
-                            v-text="s.qty_stock"
-                        ></td>
+                            class="qty_stock px-6 py-4 whitespace-no-wrap" 
+                        >
+                            <span v-text="s.qty_stock"></span>
+                        </td>
                         <td 
                             class="px-6 py-4 whitespace-no-wrap" 
                             v-text="s.code"
@@ -115,5 +116,12 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-    
+    .qty_stock{
+        span{
+            background-color: $green;
+            color: $white;
+            padding: .2rem 1.4rem;
+            border-radius: 10px;
+        }
+    }
 </style>

@@ -107,7 +107,7 @@
                         </div>
 
                         <div class="flex gap-1 flex-col">
-                            <InputLabel for="total_price" value="Valor total" />
+                            <InputLabel for="total_price" value="Valor total da compra" />
                             <TextInput
                                 id="total_price"
                                 type="text"
@@ -115,6 +115,32 @@
                                 autocomplete="total_price"
                                 disabled
                                 :value="'R$ '+form.qty*form.unity_price"
+                            />
+                        </div>
+                    </div>
+
+                    <div v-if="form.unity_price != '0'" class="mt-4 grid gap-4 grid-cols-2">
+                        <div class="flex gap-1 flex-col">
+                            <InputLabel for="win_percentage" value="Porcentagem de ganho/lucro  *" />
+                            <TextInput
+                                id="win_percentage"
+                                v-model="form.win_percentage"
+                                type="number"
+                                class="mt-1 block w-full"
+                                required
+                                autocomplete="win_percentage"
+                            />
+                        </div>
+
+                        <div class="flex gap-1 flex-col">
+                            <InputLabel for="total_price" value="Possível ganho total em cima do(s) produto(s)" />
+                            <TextInput
+                                id="total_price"
+                                type="text"
+                                class="mt-1 block w-full"
+                                autocomplete="total_price"
+                                disabled
+                                :value="'R$ '+getTotalWinWithPercentage"
                             />
                         </div>
                     </div>
@@ -186,6 +212,7 @@ export default {
                 category_id: '',
                 type_entrie: 'BUY',
                 suppliers_id: '',
+                win_percentage: '0',
                 newProduct: {
                     status: true,
                     product_id: ''
@@ -197,7 +224,7 @@ export default {
                 {value: 'OTHER', text: 'Outro (doação, ...)'},
             ],
             processing: false,
-            fieldsToValidate: ['name','qty','unity_price','stores_id','category_id','type_entrie','suppliers_id']
+            fieldsToValidate: ['name','qty','unity_price','stores_id','category_id','type_entrie','suppliers_id','win_percentage']
         }
     },
     mounted(){
@@ -273,6 +300,13 @@ export default {
             };
         }
     },
+    computed: {
+        getTotalWinWithPercentage(){
+            let totalOut = this.form.qty * this.form.unity_price;
+            let percentageWin = (totalOut * this.form.win_percentage) /100;
+            return totalOut + (percentageWin - (this.form.qty * totalOut))
+        }
+    }
 }
 </script>
 

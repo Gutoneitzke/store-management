@@ -72,11 +72,12 @@ class StocksController extends Controller
             if($request['newProduct']['status'] == '1'){
                 // new product
                 $productData = [
-                    'name'        => $request['name'],
-                    'total_price' => $request['qty'] * $request['unity_price'],
-                    'qty_stock'   => $request['qty'],
-                    'stores_id'   => $request['stores_id'],
-                    'code'        => $this->generateRandomNumber()
+                    'name'           => $request['name'],
+                    'total_price'    => $request['qty'] * $request['unity_price'],
+                    'qty_stock'      => $request['qty'],
+                    'stores_id'      => $request['stores_id'],
+                    'win_percentage' => $request['win_percentage'],
+                    'code'           => $this->generateRandomNumber()
                 ];
     
                 $product = Product::create($productData);

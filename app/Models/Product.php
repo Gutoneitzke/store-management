@@ -16,6 +16,7 @@ class Product extends Model
         'stores_id',
         'code',
         'photo',
+        'win_percentage'
     ];
 
     public function store()
