@@ -1,16 +1,45 @@
 <template>
-    <AppLayout title="Editar Loja">
+    <AppLayout title="Editar Produto">
         <PageCard>
             <div class="flex gp-2 items-center justify-between">
-                <h1 class="text-2xl">Editando Loja: {{ store.name }}</h1>
-                <Link :href="route('stores.index')">
+                <h1 class="text-2xl">Editando Produto: {{ stocks.name }}</h1>
+                <Link :href="route('stocks.index')">
                     Voltar
                 </Link>
             </div>
 
             <div class="mt-8">
                 <form @submit.prevent="submit">
-                    <div class="mt-4 grid gap-4 grid-cols-2">
+                    <div :class="['mt-4 grid gap-4', form.stores_id ? 'grid-cols-2' : '']">
+                        <div class="grid gap-1">
+                            <InputLabel for="store" value="Loja *" />
+                            <select 
+                                v-model="form.stores_id"
+                                id="store" 
+                                required 
+                                class="border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm"
+                                @change="resetAll()"
+                            >
+                                <option v-for="c,i in myStores" :key="i" :value="c.id" v-text="c.name"></option>
+                            </select>
+                        </div>
+
+                        <div v-if="form.stores_id" class="flex gap-1 flex-col">
+                            <InputLabel for="category" value="Categoria *" />
+                            <select 
+                                v-if="getAccordingSelectedStore(categories).length > 0"
+                                v-model="form.category_id"
+                                id="category" 
+                                required 
+                                class="border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm"
+                            >
+                                <option v-for="c,i in getAccordingSelectedStore(categories)" :key="i" :value="c.id" v-text="c.name"></option>
+                            </select>
+                            <p v-else class="not-has-data">Nenhuma categoria nessa loja! Crie <Link :href="route('categories.index')"><u>aqui</u></Link></p>
+                        </div>
+                    </div>
+
+                    <div v-if="form.category_id" class="mt-4 grid gap-4 form.stores_id grid-cols-2">
                         <div>
                             <InputLabel for="name" value="Nome *" />
                             <TextInput
@@ -19,67 +48,12 @@
                                 type="text"
                                 class="mt-1 block w-full"
                                 required
-                                autofocus
                                 autocomplete="name"
                             />
                         </div>
 
                         <div>
-                            <InputLabel for="cnpj" value="CNPJ *" />
-                            <TextInput
-                                id="cnpj"
-                                v-model="form.cnpj"
-                                type="text"
-                                class="mt-1 block w-full"
-                                required
-                                autocomplete="cnpj"
-                            />
-                        </div>
-                    </div>
-
-                    <div :class="['mt-4 grid gap-4', form.country ? 'grid-cols-2' : '']">
-                        <div class="flex gap-1 flex-col">
-                            <InputLabel for="country" value="País *" />
-                            <select 
-                                v-model="form.country" 
-                                @change="form.state = ''; form.city = ''"
-                                id="country" 
-                                required 
-                                class="border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm"
-                            >
-                                <option v-for="c,i in locales" :key="i" :value="c" v-text="c.name"></option>
-                            </select>
-                        </div>
-
-                        <div v-if="form.country" class="flex gap-1 flex-col">
-                            <InputLabel for="state" value="Estado *" />
-                            <select 
-                                v-model="form.state" 
-                                @change="form.city = ''"
-                                id="state" 
-                                required 
-                                class="border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm"
-                            >
-                                <option v-for="c,i in form.country.states" :key="i" :value="c" v-text="c.name"></option>
-                            </select>
-                        </div>
-                    </div>
-
-                    <div v-if="form.state" :class="['mt-4 grid gap-4', form.city ? 'grid-cols-2' : '']">
-                        <div class="flex gap-1 flex-col">
-                            <InputLabel for="city" value="Cidade *" />
-                            <select 
-                                v-model="form.city" 
-                                id="city" 
-                                required 
-                                class="border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm"
-                            >
-                                <option v-for="c,i in form.state.cities" :key="i" :value="c.id" v-text="c.name"></option>
-                            </select>
-                        </div>
-
-                        <div v-if="form.city">
-                            <InputLabel for="description" value="Descrição" />
+                            <InputLabel for="description" value="Description *" />
                             <TextInput
                                 id="description"
                                 v-model="form.description"
@@ -90,59 +64,76 @@
                         </div>
                     </div>
 
-                    <div v-if="form.city" :class="['mt-4 grid gap-4', form.city ? 'grid-cols-2' : '']">
+                    <div v-if="form.category_id" class="mt-4 grid gap-4 grid-cols-3">
                         <div class="flex gap-1 flex-col">
-                            <InputLabel for="address_street" value="Rua" />
+                            <InputLabel for="qty" value="Quantidade *" />
                             <TextInput
-                                id="address_street"
-                                v-model="form.address_street"
-                                type="text"
+                                id="qty"
+                                v-model="form.qty"
+                                type="number"
                                 class="mt-1 block w-full"
-                                autocomplete="address_street"
+                                required
+                                autocomplete="qty"
+                                @input="onlyIntegerNumber()"
                             />
                         </div>
 
                         <div class="flex gap-1 flex-col">
-                            <div class="flex gap-1 flex-col">
-                                <InputLabel for="address_neighborhood" value="Bairro" />
-                                <TextInput
-                                    id="address_neighborhood"
-                                    v-model="form.address_neighborhood"
-                                    type="text"
-                                    class="mt-1 block w-full"
-                                    autocomplete="address_neighborhood"
-                                />
-                            </div>
+                            <InputLabel for="unity_price" value="Valor unitário *" />
+                            <TextInput
+                                id="unity_price"
+                                v-model="form.unity_price"
+                                type="number"
+                                class="mt-1 block w-full"
+                                required
+                                autocomplete="unity_price"
+                            />
+                        </div>
+
+                        <div class="flex gap-1 flex-col">
+                            <InputLabel for="total_price" value="Valor total" />
+                            <TextInput
+                                id="total_price"
+                                type="text"
+                                class="mt-1 block w-full"
+                                autocomplete="total_price"
+                                disabled
+                                :value="'R$ '+form.qty*form.unity_price"
+                            />
                         </div>
                     </div>
 
-                    <div v-if="form.city" :class="['mt-4 grid gap-4', form.city ? 'grid-cols-2' : '']">
-                        <div class="flex gap-1 flex-col">
-                            <InputLabel for="address_number" value="Número" />
-                            <TextInput
-                                id="address_number"
-                                v-model="form.address_number"
-                                type="number"
-                                class="mt-1 block w-full"
-                                autocomplete="address_street"
-                            />
+                    <div v-if="form.category_id" class="mt-4 grid gap-4 grid-cols-2">
+                        <div class="flex gap-2 flex-col">
+                            <InputLabel for="suppliers" value="Fornecedor *" />
+                            <select 
+                                v-model="form.suppliers_id"
+                                v-if="getAccordingSelectedStore(suppliers).length > 0"
+                                id="suppliers" 
+                                required 
+                                class="border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm"
+                            >
+                                <option v-for="c,i in getAccordingSelectedStore(suppliers)" :key="i" :value="c.id" v-text="c.name"></option>
+                            </select>
+                            <p v-else class="not-has-data">Nenhum fornecedor nessa loja! Crie <Link :href="route('suppliers.index')"><u>aqui</u></Link></p>
                         </div>
 
-                        <div class="flex gap-1 flex-col">
-                            <InputLabel for="address_complement" value="Complemento" />
-                            <TextInput
-                                id="address_complement"
-                                v-model="form.address_complement"
-                                type="text"
-                                class="mt-1 block w-full"
-                                autocomplete="address_complement"
-                            />
+                        <div class="flex gap-2 flex-col">
+                            <InputLabel for="type_entrie" value="Tipo da entrada *" />
+                            <select 
+                                v-model="form.type_entrie"
+                                id="type_entrie" 
+                                required 
+                                class="border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm w-full"
+                            >
+                                <option v-for="c,i in typeEntries" :key="i" :value="c.value" v-text="c.text"></option>
+                            </select>
                         </div>
                     </div>
 
                     <div class="flex items-center justify-end mt-4">
                         <PrimaryButton class="mt-4" :class="{ 'opacity-25': processing }" :disabled="processing">
-                            Editar
+                            Cadastrar
                         </PrimaryButton>
                     </div>
                 </form>
@@ -167,45 +158,36 @@ export default {
         TextInput,
         PrimaryButton
     },
-    props: ['locales','store'],
+    props: ['stocks','products','categories','suppliers','myStores'],
     data() {
         return {
             form: {
-                name: this.store.name,
-                cnpj: this.store.cnpj,
-                description: this.store.description,
-                country: '',
-                state: '',
-                city: this.store.cities_id,
-                address_street: this.store.address_street,
-                address_neighborhood: this.store.address_neighborhood,
-                address_number: this.store.address_number,
-                address_complement: this.store.address_complement,
+                name: this.stocks.name,
+                description: this.stocks.description,
+                qty: this.stocks.qty_stock.toString(),
+                unity_price: this.stocks.unity_price,
+                stores_id: this.stocks.stores_id,
+                category_id: this.stocks.categories_id,
+                type_entrie: this.stocks.type,
+                suppliers_id: this.stocks.supplier_id,
             },
+            productsAccordingStoreAndCategory: [],
+            typeEntries: [
+                {value: 'BUY',   text: 'Compra'},
+                {value: 'OTHER', text: 'Outro (doação, ...)'},
+            ],
             processing: false,
-            fieldsToValidate: ['name','cnpj','city']
+            fieldsToValidate: ['name','qty','unity_price','stores_id','category_id','type_entrie','suppliers_id']
         }
-    },
-    mounted(){
-        let all = JSON.parse(JSON.stringify(Object.values(this.locales)));
-        all.forEach(a => {
-            Object.values(a.states).forEach(s => {
-                s.cities.forEach(c => {
-                    if(c.id == this.store.cities_id){
-                        this.form.country = a;
-                        this.form.state = s;
-                    }
-                })
-            })
-        });
     },
     methods: {
         submit(){
             this.processing = true;
             const formState = this.isValidForm();
             if(formState){
-                this.$inertia.put(route('stores.update', this.store.id), this.form, {
-                    onSuccess: () => {
+                this.$inertia.post(route('stocks.store'), this.form, {
+                    forceFormData: true,
+                    onSuccess: (data) => {
                         console.log('sucesso')
                     },
                     onError: (error) => {
@@ -224,18 +206,45 @@ export default {
             let isValid = true;
 
             for(const field of this.fieldsToValidate){
-                if(!this.form[field]){
+                if(!this.form[field] || this.form[field] == 0){
                     isValid = false;
                     break;
                 }
             }
 
             return isValid;
+        },
+        onlyIntegerNumber(){
+            this.form.qty = this.form.qty.replace(/[^0-9]/g, '');
+        },
+        getAccordingSelectedStore(data){
+            return data.filter(x => x.stores_id == this.form.stores_id);
+        },
+        resetAll(){
+            this.form.name = '';
+            this.form.description = '';
+            this.form.qty = '0';
+            this.form.unity_price = '0';
+            this.form.category_id = '';
+            this.form.type_entrie = 'BUY';
+            this.form.suppliers_id = '';
+            this.form.newProduct = {
+                status: true,
+                product_id: ''
+            };
         }
-    }
+    },
 }
 </script>
 
 <style lang="scss" scoped>
-    
+    #total_price{
+        cursor: not-allowed;
+        opacity: 0.7;
+        background-color: $green2;
+    }
+    .not-has-data{
+        margin-top: .6rem;
+        color: $red;
+    }
 </style>

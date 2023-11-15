@@ -134,33 +134,36 @@ class StocksController extends Controller
     }
 
     /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        //
-    }
-
-    /**
      * Show the form for editing the specified resource.
      */
     public function edit(string $id)
     {
-        //
+        $stocks = Product::where('products.id',$id)
+            ->join('products_has_categories', 'products.id', '=', 'products_has_categories.products_id')
+            ->join('products_has_entries', 'products.id', '=', 'products_has_entries.products_id')
+            ->join('products_entries', 'products_has_entries.entries_id', '=', 'products_entries.id')
+            ->join('supplier_has_products', 'products.id', '=', 'supplier_has_products.products_id')
+            ->first();
+        $categories = Category::whereIn('stores_id', $this->getMyStores())->get();
+        $suppliers  = Supplier::whereIn('stores_id', $this->getMyStores())->get();
+        $myStores   = Store::whereIn('id', $this->getMyStores())->get();
+
+        if($stocks->count() === 0){
+            return redirect(route('suppliers.index'));
+        } else {
+            return Inertia::render('StoreManagement/Stocks/EditProduct',[
+                'stocks'                => $stocks,
+                'categories'            => $categories,
+                'suppliers'             => $suppliers,
+                'myStores'              => $myStores
+            ]);
+        }
     }
 
     /**
      * Update the specified resource in storage.
      */
     public function update(Request $request, string $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
     {
         //
     }
