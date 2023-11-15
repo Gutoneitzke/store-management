@@ -43,7 +43,7 @@
 
                     <div v-if="form.stores_id" class="mt-4 grid gap-4 grid-cols-2">
                         <div class="flex gap-1 flex-col">
-                            <InputLabel for="description" value="Description *" />
+                            <InputLabel for="description" value="Description" />
                             <TextInput
                                 id="description"
                                 v-model="form.description"
@@ -80,6 +80,7 @@
                                 >
                                     <option v-for="c,i in getAccordingSelectedStore(products)" :key="i" :value="c.id" v-text="c.name"></option>
                                 </select>
+                                <p v-else class="not-has-data">Nenhum produto nessa loja! Crie <Link :href="route('stocks.index')"><u>aqui</u></Link></p>
                             </div>
 
                             <div class="flex gap-1 flex-col">
@@ -200,7 +201,7 @@ export default {
                 {value: 'OTHER', text: 'Outro (perda, doação, ...)'},
             ],
             processing: false,
-            fieldsToValidate: ['qty','unity_price','stores_id','type_sell','customers_id']
+            fieldsToValidate: ['stores_id','type_sell','customers_id','productsToSell']
         }
     },
     methods: {
@@ -229,6 +230,14 @@ export default {
             let isValid = true;
 
             for(const field of this.fieldsToValidate){
+                if(field == 'productsToSell'){
+                    this.form[field].forEach(e => {
+                        if(!e.products_id || !e.qty || e.qty == 0 || !e.unity_price || e.unity_price == 0){
+                            isValid = false;
+                        }
+                    })
+                    continue;
+                }
                 if(!this.form[field] || this.form[field] == 0){
                     isValid = false;
                     break;
@@ -244,11 +253,15 @@ export default {
             return data.filter(x => x.stores_id == this.form.stores_id);
         },
         resetAll(){
+            this.form.type_sell = 'SELL';
+            this.form.customers_id = '';
             this.form.description = '';
-            this.form.qty = '1';
-            this.form.unity_price = '0';
-            this.form.type_sell = 'BUY';
-            this.form.suppliers_id = '';
+            this.form.productsToSell = [{
+                products_id: '',
+                qty: '1',
+                unity_price: '0',
+            }];
+            this.form.discount = '0';
         },
         addMoreProductsToSell(){
             this.form.productsToSell.push({
