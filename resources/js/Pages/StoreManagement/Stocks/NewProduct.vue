@@ -18,6 +18,7 @@
                                 id="store" 
                                 required 
                                 class="border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm"
+                                @change="resetAll()"
                             >
                                 <option v-for="c,i in myStores" :key="i" :value="c.id" v-text="c.name"></option>
                             </select>
@@ -31,6 +32,7 @@
                                 id="category" 
                                 required 
                                 class="border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm"
+                                @change="getAccordingSelectedCategory(products)"
                             >
                                 <option v-for="c,i in getAccordingSelectedStore(categories)" :key="i" :value="c.id" v-text="c.name"></option>
                             </select>
@@ -43,12 +45,12 @@
                             <InputLabel for="product" value="Produto *" />
                             <select 
                                 v-model="form.newProduct.product_id"
-                                v-if="getAccordingSelectedStore(products).length > 0"
+                                v-if="productsAccordingStoreAndCategory.length > 0"
                                 id="product" 
                                 required 
                                 class="mt-1 border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm w-full"
                             >
-                                <option v-for="c,i in getAccordingSelectedStore(products)" :key="i" :value="c.id" v-text="c.name"></option>
+                                <option v-for="c,i in productsAccordingStoreAndCategory" :key="i" :value="c.id" v-text="c.name"></option>
                             </select>
                             <button @click="form.newProduct.status = true">Produto não existente ?</button>
                         </div>
@@ -63,7 +65,7 @@
                                 required
                                 autocomplete="name"
                             />
-                            <button v-if="products.length > 0" @click="form.newProduct.status = false">Produto já existente ?</button>
+                            <button v-if="productsAccordingStoreAndCategory.length > 0" @click="form.newProduct.status = false">Produto já existente ?</button>
                         </div>
 
                         <div>
@@ -117,8 +119,8 @@
                         </div>
                     </div>
 
-                    <div v-if="form.category_id" class="mt-4 grid gap-4 grid-cols-2">
-                        <div class="flex gap-2 flex-col">
+                    <div v-if="form.category_id" :class="['mt-4 grid gap-4', form.newProduct.status ? 'grid-cols-2' : '']">
+                        <div v-if="form.newProduct.status" class="flex gap-2 flex-col">
                             <InputLabel for="suppliers" value="Fornecedor *" />
                             <select 
                                 v-model="form.suppliers_id"
@@ -138,7 +140,7 @@
                                 v-model="form.type_entrie"
                                 id="type_entrie" 
                                 required 
-                                class="border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm"
+                                class="border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm w-full"
                             >
                                 <option v-for="c,i in typeEntries" :key="i" :value="c.value" v-text="c.text"></option>
                             </select>
@@ -172,7 +174,7 @@ export default {
         TextInput,
         PrimaryButton
     },
-    props: ['products','categories','suppliers','myStores'],
+    props: ['products','productsHasCategories','categories','suppliers','myStores'],
     data() {
         return {
             form: {
@@ -189,6 +191,7 @@ export default {
                     product_id: ''
                 }
             },
+            productsAccordingStoreAndCategory: [],
             typeEntries: [
                 {value: 'BUY',   text: 'Compra'},
                 {value: 'OTHER', text: 'Outro (doação, ...)'},
@@ -196,6 +199,9 @@ export default {
             processing: false,
             fieldsToValidate: ['name','qty','unity_price','stores_id','category_id','type_entrie','suppliers_id']
         }
+    },
+    mounted(){
+        this.getAccordingSelectedCategory(this.products);
     },
     methods: {
         submit(){
@@ -223,7 +229,7 @@ export default {
             let isValid = true;
 
             for(const field of this.fieldsToValidate){
-                if(field == 'name' && !this.form.newProduct.status){
+                if((field == 'name' || field == 'suppliers_id') && !this.form.newProduct.status){
                     continue;
                 }
                 if(!this.form[field] || this.form[field] == 0){
@@ -238,7 +244,33 @@ export default {
             this.form.qty = this.form.qty.replace(/[^0-9]/g, '');
         },
         getAccordingSelectedStore(data){
-            return data.filter(x => x.stores_id == this.form.stores_id)
+            return data.filter(x => x.stores_id == this.form.stores_id);
+        },
+        getAccordingSelectedCategory(data){
+            this.form.newProduct.status = true;
+            this.form.newProduct.product_id = '';
+            let products = [];
+            data.forEach(d => {
+                this.productsHasCategories.forEach(p => {
+                    if(d.id == p.products_id && p.categories_id == this.form.category_id){
+                        products.push(d);
+                    }
+                })
+            })
+            this.productsAccordingStoreAndCategory = products;
+        },
+        resetAll(){
+            this.form.name = '';
+            this.form.description = '';
+            this.form.qty = '0';
+            this.form.unity_price = '0';
+            this.form.category_id = '';
+            this.form.type_entrie = 'BUY';
+            this.form.suppliers_id = '';
+            this.form.newProduct = {
+                status: true,
+                product_id: ''
+            };
         }
     },
 }
