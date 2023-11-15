@@ -39,7 +39,7 @@
                         </div>
                     </div>
 
-                    <div v-if="form.category_id" class="mt-4 grid gap-4 form.stores_id grid-cols-2">
+                    <div v-if="form.category_id" class="mt-4 grid gap-4 grid-cols-2">
                         <div>
                             <InputLabel for="name" value="Nome *" />
                             <TextInput

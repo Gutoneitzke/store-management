@@ -11,7 +11,6 @@ use App\Models\Store;
 use App\Models\Supplier;
 use App\Models\SupplierHasProduct;
 use App\Traits\GenerateRandomNumberTrait;
-use App\Traits\GetCountryStateCityTrait;
 use App\Traits\HasSelectedStoreTrait;
 use App\Traits\MyStoresTrait;
 use Illuminate\Http\Request;
@@ -19,7 +18,6 @@ use Inertia\Inertia;
 
 class StocksController extends Controller
 {
-    use GetCountryStateCityTrait;
     use MyStoresTrait;
     use HasSelectedStoreTrait;
     use GenerateRandomNumberTrait;

@@ -2,7 +2,7 @@
     <AppLayout title="Novo Produto">
         <PageCard>
             <div class="flex gp-2 items-center justify-between">
-                <h1 class="text-2xl">Nova Entrada de Produto</h1>
+                <h1 class="text-2xl">Nova Entrada de Produto(s)</h1>
                 <Link :href="route('stocks.index')">
                     Voltar
                 </Link>
@@ -40,7 +40,7 @@
                         </div>
                     </div>
 
-                    <div v-if="form.category_id" class="mt-4 grid gap-4 form.stores_id grid-cols-2">
+                    <div v-if="form.category_id" class="mt-4 grid gap-4 grid-cols-2">
                         <div v-if="!form.newProduct.status">
                             <InputLabel for="product" value="Produto *" />
                             <select 
