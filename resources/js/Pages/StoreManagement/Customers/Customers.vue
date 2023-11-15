@@ -1,5 +1,5 @@
 <template>
-    <AppLayout title="Lojas">
+    <AppLayout title="Clientes">
         <PageCard>
             <div class="flex gp-2 items-center justify-between">
                 <h1 class="text-2xl">Meus clientes</h1>

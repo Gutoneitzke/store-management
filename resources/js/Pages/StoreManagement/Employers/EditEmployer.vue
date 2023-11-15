@@ -1,5 +1,5 @@
 <template>
-    <AppLayout title="Novo Funcionário">
+    <AppLayout title="Editar Funcionário">
         <PageCard>
             <div class="flex gp-2 items-center justify-between">
                 <h1 class="text-2xl">Editando Funcionário: {{ form.name }}</h1>

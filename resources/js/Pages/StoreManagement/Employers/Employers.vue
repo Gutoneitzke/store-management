@@ -2,7 +2,7 @@
     <AppLayout title="Funcionários">
         <PageCard>
             <div class="flex gp-2 items-center justify-between">
-                <h1 class="text-2xl">Funcionários</h1>
+                <h1 class="text-2xl">Meus funcionários</h1>
                 <Link :href="route('employers.create')">
                     <PrimaryButton>
                         NOVO FUNCIONÁRIO
