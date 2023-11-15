@@ -67,6 +67,9 @@
                     </div>
 
                     <div v-if="form.stores_id" v-for="p,i in form.productsToSell" :key="i" class="mt-8 product">
+                        <div class="flex items-center justify-end mt-4">
+                            <button v-if="i > 0" @click="form.productsToSell.splice(i, 1);">Remover produto</button>
+                        </div>
                         <div class="mt-4 grid gap-4 grid-cols-3">
                             <div class="flex gap-1 flex-col">
                                 <InputLabel for="product" :value="'Produto '+ (i+1) +'*'" />
@@ -297,7 +300,7 @@ export default {
     }
     .product{
         background-color: $white2;
-        padding: 1rem 2rem 1.4rem 2rem;
+        padding: .4rem 2rem 1.4rem;
         border-radius: 1rem;
     }
     #total_price{
