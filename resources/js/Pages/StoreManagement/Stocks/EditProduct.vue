@@ -103,6 +103,32 @@
                         </div>
                     </div>
 
+                    <div v-if="form.unity_price != '0'" class="mt-4 grid gap-4 grid-cols-2">
+                        <div class="flex gap-1 flex-col">
+                            <InputLabel for="win_percentage" value="Porcentagem de ganho/lucro  *" />
+                            <TextInput
+                                id="win_percentage"
+                                v-model="form.win_percentage"
+                                type="number"
+                                class="mt-1 block w-full"
+                                required
+                                autocomplete="win_percentage"
+                            />
+                        </div>
+
+                        <div class="flex gap-1 flex-col">
+                            <InputLabel for="total_price" value="Possível ganho total em cima do(s) produto(s)" />
+                            <TextInput
+                                id="total_price"
+                                type="text"
+                                class="mt-1 block w-full"
+                                autocomplete="total_price"
+                                disabled
+                                :value="'R$ '+getTotalWinWithPercentage"
+                            />
+                        </div>
+                    </div>
+
                     <div v-if="form.category_id" class="mt-4 grid gap-4 grid-cols-2">
                         <div class="flex gap-2 flex-col">
                             <InputLabel for="suppliers" value="Fornecedor *" />
@@ -169,6 +195,7 @@ export default {
                 stores_id: this.stocks.stores_id,
                 category_id: this.stocks.categories_id,
                 type_entrie: this.stocks.type,
+                win_percentage: this.stocks.win_percentage,
                 suppliers_id: this.stocks.supplier_id,
             },
             productsAccordingStoreAndCategory: [],
@@ -234,6 +261,13 @@ export default {
             };
         }
     },
+    computed: {
+        getTotalWinWithPercentage(){
+            let totalOut = this.form.qty * this.form.unity_price;
+            let percentageWin = (totalOut * this.form.win_percentage) /100;
+            return totalOut + (percentageWin - totalOut);
+        }
+    }
 }
 </script>
 

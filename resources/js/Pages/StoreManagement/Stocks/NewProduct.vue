@@ -304,7 +304,7 @@ export default {
         getTotalWinWithPercentage(){
             let totalOut = this.form.qty * this.form.unity_price;
             let percentageWin = (totalOut * this.form.win_percentage) /100;
-            return totalOut + (percentageWin - (this.form.qty * totalOut))
+            return totalOut + (percentageWin - totalOut);
         }
     }
 }
