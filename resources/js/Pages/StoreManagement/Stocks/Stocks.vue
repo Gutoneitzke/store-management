@@ -41,6 +41,7 @@
                         </th>
                         <th 
                             class="px-6 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider"
+                            style="text-align: center;"
                         >
                             Quantidade em estoque
                         </th>
@@ -117,6 +118,7 @@ export default {
 
 <style lang="scss" scoped>
     .qty_stock{
+        text-align: center;
         span{
             background-color: $green;
             color: $white;
