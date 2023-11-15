@@ -144,7 +144,9 @@ class StocksController extends Controller
             ->join('products_has_entries', 'products.id', '=', 'products_has_entries.products_id')
             ->join('products_entries', 'products_has_entries.entries_id', '=', 'products_entries.id')
             ->join('supplier_has_products', 'products.id', '=', 'supplier_has_products.products_id')
+            ->select('products.*','products_has_categories.*','products_has_entries.unity_price','products_entries.id as products_entries_id','products_entries.type','products_entries.description','supplier_has_products.*')
             ->first();
+
         $categories = Category::whereIn('stores_id', $this->getMyStores())->get();
         $suppliers  = Supplier::whereIn('stores_id', $this->getMyStores())->get();
         $myStores   = Store::whereIn('id', $this->getMyStores())->get();
@@ -166,6 +168,61 @@ class StocksController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        try{
+            // product
+            $productData = [
+                'name'           => $request['name'],
+                'total_price'    => $request['qty'] * $request['unity_price'],
+                'qty_stock'      => (int)$request['qty'],
+                'stores_id'      => $request['stores_id'],
+                'win_percentage' => (int)$request['win_percentage'],
+            ];
+
+            $product = Product::find($id);
+            $product->update($productData);
+
+            // product_entries
+            $productEntriesData = [
+                'description' => $request['description'],
+                'qty'         => $request['qty'],
+                'total_price' => $request['qty'] * $request['unity_price'],
+                'type'        => $request['type_entrie']
+            ];
+            $productEntries = ProductEntry::find($request['stocks_data']['products_entries_id']);
+            $productEntries->update($productEntriesData);
+
+            // products_has_entries
+            // delete
+            ProductHasEntry::where('products_id',$id)->delete();
+
+            // create
+            $productHasEntriesData = [
+                'products_id' => $id,
+                'entries_id'  => $productEntries->id,
+                'unity_price' => $request['unity_price']
+            ];
+
+            for($i = 0; $i < (int)$request['qty']; $i++){
+                ProductHasEntry::create($productHasEntriesData);
+            }
+
+            // products_has_categories
+            $productHasCategoriesData = [
+                'categories_id' => $request['category_id'],
+            ];
+            $productEntries = ProductHasCategory::where('products_id',$id)->first();
+            $productEntries->update($productHasCategoriesData);
+
+            // supplier_has_products
+            $supplierHasProductsData = [
+                'supplier_id' => $request['suppliers_id'],
+            ];
+            $supplierHasProducts = SupplierHasProduct::where('products_id',$id)->first();
+            $supplierHasProducts->update($supplierHasProductsData);
+
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', 'Falha ao registrar o produto!');
+        }
+        return redirect(route('stocks.index'));
     }
 }

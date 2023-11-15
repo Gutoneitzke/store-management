@@ -66,7 +66,7 @@
 
                     <div v-if="form.category_id" class="mt-4 grid gap-4 grid-cols-3">
                         <div class="flex gap-1 flex-col">
-                            <InputLabel for="qty" value="Quantidade *" />
+                            <InputLabel for="qty" value="Quantidade" />
                             <TextInput
                                 id="qty"
                                 v-model="form.qty"
@@ -159,7 +159,7 @@
 
                     <div class="flex items-center justify-end mt-4">
                         <PrimaryButton class="mt-4" :class="{ 'opacity-25': processing }" :disabled="processing">
-                            Cadastrar
+                            Editar
                         </PrimaryButton>
                     </div>
                 </form>
@@ -197,6 +197,7 @@ export default {
                 type_entrie: this.stocks.type,
                 win_percentage: this.stocks.win_percentage,
                 suppliers_id: this.stocks.supplier_id,
+                stocks_data: this.stocks
             },
             productsAccordingStoreAndCategory: [],
             typeEntries: [
@@ -212,8 +213,7 @@ export default {
             this.processing = true;
             const formState = this.isValidForm();
             if(formState){
-                this.$inertia.post(route('stocks.store'), this.form, {
-                    forceFormData: true,
+                this.$inertia.put(route('stocks.update', this.stocks.id), this.form, {
                     onSuccess: (data) => {
                         console.log('sucesso')
                     },
