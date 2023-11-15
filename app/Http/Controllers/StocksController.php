@@ -210,15 +210,14 @@ class StocksController extends Controller
             $productHasCategoriesData = [
                 'categories_id' => $request['category_id'],
             ];
-            $productEntries = ProductHasCategory::where('products_id',$id)->first();
-            $productEntries->update($productHasCategoriesData);
+
+            ProductHasCategory::where('products_id',$id)->update($productHasCategoriesData);
 
             // supplier_has_products
             $supplierHasProductsData = [
                 'supplier_id' => $request['suppliers_id'],
             ];
-            $supplierHasProducts = SupplierHasProduct::where('products_id',$id)->first();
-            $supplierHasProducts->update($supplierHasProductsData);
+            SupplierHasProduct::where('products_id',$id)->update($supplierHasProductsData);
 
         } catch (\Exception $e) {
             return redirect()->back()->with('error', 'Falha ao registrar o produto!');
