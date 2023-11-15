@@ -9,6 +9,8 @@ class ProductOutput extends Model
 {
     use HasFactory;
 
+    protected $table = 'products_output';
+
     protected $fillable = [
         'description',
         'qty',
