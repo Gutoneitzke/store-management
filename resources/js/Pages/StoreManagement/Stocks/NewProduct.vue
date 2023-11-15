@@ -2,7 +2,7 @@
     <AppLayout title="Novo Produto">
         <PageCard>
             <div class="flex gp-2 items-center justify-between">
-                <h1 class="text-2xl">Novo Produto</h1>
+                <h1 class="text-2xl">Nova Entrada de Produto</h1>
                 <Link :href="route('stocks.index')">
                     Voltar
                 </Link>
@@ -39,20 +39,20 @@
                     </div>
 
                     <div v-if="form.category_id" class="mt-4 grid gap-4 form.stores_id grid-cols-2">
-                        <div v-if="!form.newProduct && products.length > 0">
+                        <div v-if="!form.newProduct.status">
                             <InputLabel for="product" value="Produto *" />
                             <select 
                                 v-model="form.newProduct.product_id"
                                 v-if="getAccordingSelectedStore(products).length > 0"
                                 id="product" 
                                 required 
-                                class="border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm"
+                                class="mt-1 border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm w-full"
                             >
                                 <option v-for="c,i in getAccordingSelectedStore(products)" :key="i" :value="c.id" v-text="c.name"></option>
                             </select>
-                            <button @click="form.newProduct.status = !form.newProduct.status; form.newProduct.product_id = ''">Produto não existente ?</button>
+                            <button @click="form.newProduct.status = true">Produto não existente ?</button>
                         </div>
-
+                            <!-- Adicionar mais produtos para um produto já existente -->
                         <div v-else>
                             <InputLabel for="name" value="Nome *" />
                             <TextInput
@@ -63,7 +63,7 @@
                                 required
                                 autocomplete="name"
                             />
-                            <button v-if="products.length > 0" @click="form.newProduct.status = !form.newProduct.status">Produto existente ?</button>
+                            <button v-if="products.length > 0" @click="form.newProduct.status = false">Produto já existente ?</button>
                         </div>
 
                         <div>
@@ -223,7 +223,10 @@ export default {
             let isValid = true;
 
             for(const field of this.fieldsToValidate){
-                if(!this.form[field]){
+                if(field == 'name' && !this.form.newProduct.status){
+                    continue;
+                }
+                if(!this.form[field] || this.form[field] == 0){
                     isValid = false;
                     break;
                 }
