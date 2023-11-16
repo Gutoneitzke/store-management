@@ -50,12 +50,12 @@ class SalesController extends Controller
             $sales = DB::table('store_management.products_output as po')
                         ->select('po.*', DB::raw('(SELECT GROUP_CONCAT(DISTINCT ps.sales_id) FROM products_has_sales ps
                             JOIN products p ON p.id = ps.products_id
-                            WHERE stores_id = ' . $this->getMyStores() . ') AS products_has_sales_id'))
+                            WHERE stores_id IN (' . implode(', ', $this->getMyStores()) . ')) AS products_has_sales_id'))
                         ->whereIn('po.id', function ($query) {
                             $query->select(DB::raw('DISTINCT ps.sales_id'))
                                 ->from('products_has_sales as ps')
                                 ->join('products as p', 'p.id', '=', 'ps.products_id')
-                                ->whereIn('stores_id', '=', $this->getMyStores());
+                                ->whereIn('stores_id', $this->getMyStores());
                         })
                         ->get();
 
