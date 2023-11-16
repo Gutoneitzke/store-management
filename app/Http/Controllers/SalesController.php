@@ -118,7 +118,7 @@ class SalesController extends Controller
                 'qty'          => $totalQty,
                 'total_price'  => $totalValue,
                 'customers_id' => $request['customers_id'],
-                // 'discount'     => $request['discount'],
+                'discount'     => $request['discount'],
             ];
             $productOutput = ProductOutput::create($productOutputData);
             
@@ -144,7 +144,27 @@ class SalesController extends Controller
      */
     public function edit(string $id)
     {
-        //
+        $sales                 = ProductOutput::join('products_has_sales', 'products_output.id', '=', 'products_has_sales.sales_id')
+                                    ->join('products', 'products.id', '=', 'products_has_sales.products_id')
+                                    ->where('products_output.id', $id)
+                                    ->select('products_output.*','products.name','products.qty_stock','products.stores_id','products_has_sales.unity_price','products_has_sales.products_id')
+                                    ->get();
+        $products              = Product::whereIn('stores_id', $this->getMyStores())->get();
+        $productsHasCategories = ProductHasCategory::whereIn('products_id', $products->pluck('id')->toArray())->get();
+        $productsHasEntries    = ProductHasEntry::whereIn('products_id', $products->pluck('id')->toArray())->get();
+        $categories            = Category::whereIn('stores_id', $this->getMyStores())->get();
+        $customers             = Customer::whereIn('stores_id', $this->getMyStores())->get();
+        $myStores              = Store::whereIn('id', $this->getMyStores())->get();
+
+        return Inertia::render('StoreManagement/Sales/EditSale',[
+            'sales'                 => $sales,
+            'products'              => $products,
+            'productsHasCategories' => $productsHasCategories,
+            'productsHasEntries'    => $productsHasEntries,
+            'categories'            => $categories,
+            'customers'             => $customers,
+            'myStores'              => $myStores
+        ]);
     }
 
     /**
