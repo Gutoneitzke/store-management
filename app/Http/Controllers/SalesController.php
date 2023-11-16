@@ -30,11 +30,17 @@ class SalesController extends Controller
         if($selectedStore){
             $sales = ProductOutput::join('products_has_sales', 'products_output.id', '=', 'products_has_sales.sales_id')
                             ->join('products', 'products_has_sales.products_id', '=', 'products.id')
-                            ->where('stores_id', $selectedStore['id'])->get();
+                            ->where('stores_id', $selectedStore['id'])
+                            ->select('products_output.*')
+                            ->distinct()
+                            ->get();
         } else {
             $sales = ProductOutput::join('products_has_sales', 'products_output.id', '=', 'products_has_sales.sales_id')
                             ->join('products', 'products_has_sales.products_id', '=', 'products.id')
-                            ->whereIn('stores_id', $this->getMyStores())->get();
+                            ->whereIn('stores_id', $this->getMyStores())
+                            ->select('products_output.*')
+                            ->distinct()
+                            ->get();
         }
 
         return Inertia::render('StoreManagement/Sales/Sales',[

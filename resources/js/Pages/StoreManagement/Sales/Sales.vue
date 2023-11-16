@@ -2,7 +2,7 @@
     <AppLayout title="Vendas">
         <PageCard>
             <div class="flex gp-2 items-center justify-between">
-                <h1 class="text-2xl">Minhas vendas</h1>
+                <h1 class="text-2xl">Minhas vendas: {{ sales.length }}</h1>
                 <Link :href="route('sales.create')">
                     <PrimaryButton>
                         NOVA VENDA
@@ -20,17 +20,17 @@
                         <th 
                             class="px-6 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider"
                         >
-                            Nome
+                            Quantidade de produtos
                         </th>
                         <th 
                             class="px-6 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider"
                         >
-                            CNPJ
+                            Valor Total
                         </th>
                         <th 
                             class="px-6 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider"
                         >
-                            Cidade
+                            Data
                         </th>
                         <th
                             class="px-6 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider"
@@ -45,15 +45,15 @@
                         ></td>
                         <td 
                             class="px-6 py-4 whitespace-no-wrap" 
-                            v-text="s.name"
+                            v-text="s.qty"
                         ></td>
                         <td 
                             class="px-6 py-4 whitespace-no-wrap" 
-                            v-text="s.cnpj"
+                            v-text="s.total_price"
                         ></td>
                         <td 
                             class="px-6 py-4 whitespace-no-wrap" 
-                            v-text="s.city.name"
+                            v-text="formatDate(s.created_at)"
                         ></td>
                         <td>
                             <div class="flex gap-4 justify-center">
@@ -84,6 +84,19 @@ export default {
         Link
     },
     props: ['sales'],
+    methods: {
+        formatDate(date) {
+            const data = new Date(date);
+
+            const dia = ('0' + data.getDate()).slice(-2);
+            const mes = ('0' + (data.getMonth() + 1)).slice(-2);
+            const ano = data.getFullYear();
+            const hora = ('0' + data.getHours()).slice(-2);
+            const minuto = ('0' + data.getMinutes()).slice(-2);
+
+            return `${dia}/${mes}/${ano} ${hora}:${minuto}`;
+        },
+    }
 }
 </script>
 
