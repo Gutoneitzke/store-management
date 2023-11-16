@@ -17,6 +17,7 @@ class ProductOutput extends Model
         'type',
         'total_price',
         'customers_id',
+        'discount'
     ];
 
     public function customer()
