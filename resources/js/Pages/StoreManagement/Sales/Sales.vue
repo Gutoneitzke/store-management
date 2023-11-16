@@ -2,7 +2,7 @@
     <AppLayout title="Vendas">
         <PageCard>
             <div class="flex gp-2 items-center justify-between">
-                <h1 class="text-2xl">Minhas vendas: {{ sales.length }}</h1>
+                <h1 class="text-2xl">Total de <b>{{ sales.length }}</b> vendas</h1>
                 <Link :href="route('sales.create')">
                     <PrimaryButton>
                         NOVA VENDA

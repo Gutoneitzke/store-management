@@ -172,14 +172,48 @@ class SalesController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
-    }
+        try{
+            // product_entries
+            $totalValue = 0;
+            $totalQty = 0;
+            for($i = 0; $i < count($request['productsToSell']); $i++)
+            {
+                $totalValue += $request['productsToSell'][$i]['unity_price'] * $request['productsToSell'][$i]['qty'];
+                $totalQty   += $request['productsToSell'][$i]['qty'];
+            }
+            
+            if(!empty($request['discount'])){
+                $totalValue = $totalValue - ($totalValue * $request['discount'])/100;
+            }
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        //
+            $productOutputData = [
+                'description'  => $request['description'],
+                'qty'          => $totalQty,
+                'total_price'  => $totalValue,
+                'customers_id' => $request['customers_id'],
+                'discount'     => $request['discount'],
+            ];
+            $productOutput = ProductOutput::find($id);
+            $productOutput->update($productOutputData);
+            
+            // products_has_sales
+            // delete
+            ProductHasSale::where('sales_id',$id)->delete();
+
+            // create
+            for($i = 0; $i < count($request['productsToSell']); $i++){
+                for($y = 0; $y < $request['productsToSell'][$i]['qty']; $y++){
+                    $productsHasSalesData = [
+                        'products_id' => $request['productsToSell'][$i]['products_id'],
+                        'sales_id'    => $productOutput->id,
+                        'unity_price' => $request['productsToSell'][$i]['unity_price'],
+                    ];
+                    ProductHasSale::create($productsHasSalesData);
+                }
+            }
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', 'Falha ao editar a venda!');
+        }
+        return redirect(route('sales.index'));
     }
 }

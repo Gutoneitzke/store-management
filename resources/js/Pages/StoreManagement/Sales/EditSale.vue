@@ -2,7 +2,7 @@
     <AppLayout title="Eidtar Venda">
         <PageCard>
             <div class="flex gp-2 items-center justify-between">
-                <h1 class="text-2xl">Editando venda: {{ sales.id }}</h1>
+                <h1 class="text-2xl">Editando venda: {{ sales[0].id }}</h1>
                 <Link :href="route('sales.index')">
                     Voltar
                 </Link>
@@ -159,7 +159,7 @@
 
                     <div class="flex items-center justify-end mt-4">
                         <PrimaryButton class="mt-4" :class="{ 'opacity-25': processing }" :disabled="processing">
-                            Cadastrar
+                            Editar
                         </PrimaryButton>
                     </div>
                 </form>
@@ -215,8 +215,7 @@ export default {
             this.processing = true;
             const formState = this.isValidForm();
             if(formState){
-                this.$inertia.post(route('sales.store'), this.form, {
-                    forceFormData: true,
+                this.$inertia.put(route('sales.update', this.sales[0].id), this.form, {
                     onSuccess: (data) => {
                         console.log('sucesso')
                     },
