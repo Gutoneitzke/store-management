@@ -13,6 +13,7 @@ use App\Models\Store;
 use App\Traits\HasSelectedStoreTrait;
 use App\Traits\MyStoresTrait;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
 
 class SalesController extends Controller
@@ -28,23 +29,46 @@ class SalesController extends Controller
         $selectedStore = $this->getSelectedStore();
 
         if($selectedStore){
-            $sales = ProductOutput::join('products_has_sales', 'products_output.id', '=', 'products_has_sales.sales_id')
-                            ->join('products', 'products_has_sales.products_id', '=', 'products.id')
-                            ->where('stores_id', $selectedStore['id'])
-                            ->select('products_output.*')
-                            ->distinct()
-                            ->get();
+            $sales = DB::table('store_management.products_output as po')
+                        ->select('po.*', DB::raw('(SELECT GROUP_CONCAT(DISTINCT ps.sales_id) FROM products_has_sales ps
+                            JOIN products p ON p.id = ps.products_id
+                            WHERE stores_id = ' . $selectedStore['id'] . ') AS products_has_sales_id'))
+                        ->whereIn('po.id', function ($query) use ($selectedStore) {
+                            $query->select(DB::raw('DISTINCT ps.sales_id'))
+                                ->from('products_has_sales as ps')
+                                ->join('products as p', 'p.id', '=', 'ps.products_id')
+                                ->where('stores_id', '=', $selectedStore['id']);
+                        })
+                        ->get();
+
+
+            $productsHasSales = ProductHasSale::join('products', 'products_has_sales.products_id', '=', 'products.id')
+                                ->where('stores_id', $selectedStore['id'])
+                                ->select('products.*','products_has_sales.sales_id as products_has_sales_id')
+                                ->get();
         } else {
-            $sales = ProductOutput::join('products_has_sales', 'products_output.id', '=', 'products_has_sales.sales_id')
-                            ->join('products', 'products_has_sales.products_id', '=', 'products.id')
-                            ->whereIn('stores_id', $this->getMyStores())
-                            ->select('products_output.*')
-                            ->distinct()
-                            ->get();
+            $sales = DB::table('store_management.products_output as po')
+                        ->select('po.*', DB::raw('(SELECT GROUP_CONCAT(DISTINCT ps.sales_id) FROM products_has_sales ps
+                            JOIN products p ON p.id = ps.products_id
+                            WHERE stores_id = ' . $this->getMyStores() . ') AS products_has_sales_id'))
+                        ->whereIn('po.id', function ($query) {
+                            $query->select(DB::raw('DISTINCT ps.sales_id'))
+                                ->from('products_has_sales as ps')
+                                ->join('products as p', 'p.id', '=', 'ps.products_id')
+                                ->whereIn('stores_id', '=', $this->getMyStores());
+                        })
+                        ->get();
+
+
+            $productsHasSales = ProductHasSale::join('products', 'products_has_sales.products_id', '=', 'products.id')
+                                ->whereIn('stores_id', $this->getMyStores())
+                                ->select('products.*','products_has_sales.sales_id as products_has_sales_id')
+                                ->get();
         }
 
         return Inertia::render('StoreManagement/Sales/Sales',[
-            'sales' => $sales
+            'sales'            => $sales,
+            'productsHasSales' => $productsHasSales
         ]);
     }
 
