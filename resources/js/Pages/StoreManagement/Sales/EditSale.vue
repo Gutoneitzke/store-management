@@ -97,6 +97,13 @@
                                     autocomplete="qty"
                                     @input="onlyIntegerNumber()"
                                 />
+                                <span 
+                                    v-if="p.products_id != ''" 
+                                    :class="[p.qty > getMaxQtyInStock(p.products_id) ? 'red-color' : '']"
+                                    style="font-size: .8rem;"
+                                >
+                                    Quantidade no estoque {{ getMaxQtyInStock(p.products_id) }}
+                                </span>
                             </div>
     
                             <div class="flex gap-1 flex-col">
@@ -240,6 +247,10 @@ export default {
                         if(!e.products_id || !e.qty || e.qty == 0 || !e.unity_price || e.unity_price == 0){
                             isValid = false;
                         }
+                        if(e.qty > this.getMaxQtyInStock(e.products_id)){
+                            alert('Não é possível vender uma quantidade maior de produtos que você possui no estoque!');
+                            isValid = false;
+                        }
                     })
                     continue;
                 }
@@ -301,6 +312,9 @@ export default {
             }
 
             this.form.productsToSell = array
+        },
+        getMaxQtyInStock(id){
+            return this.products.find(x => x.id == id)['qty_stock'];
         }
     },
     computed: {
@@ -320,6 +334,9 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+    .red-color{
+        color: red;
+    }
     .disabled{
         opacity: 0.5;
         cursor: not-allowed;
