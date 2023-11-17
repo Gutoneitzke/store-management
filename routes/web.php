@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\CategoriesController;
 use App\Http\Controllers\CustomersController;
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\EmployersController;
 use App\Http\Controllers\SalesController;
 use App\Http\Controllers\StocksController;
@@ -33,7 +34,7 @@ Route::get('/', function () {
 });
 
 Route::middleware(['auth:sanctum',config('jetstream.auth_session'),'verified',])->group(function () {
-    Route::get('/dashboard', function () {return Inertia::render('Dashboard');})->name('dashboard');
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
     Route::prefix('categories')->controller(CategoriesController::class)->name('categories.')->group(function() {
         Route::get('/', 'index')->name('index');
