@@ -10,6 +10,7 @@ use App\Models\ProductHasEntry;
 use App\Models\ProductHasSale;
 use App\Models\ProductOutput;
 use App\Models\Store;
+use App\Traits\HasProductsInStockTrait;
 use App\Traits\HasSelectedStoreTrait;
 use App\Traits\MyStoresTrait;
 use Illuminate\Http\Request;
@@ -20,6 +21,7 @@ class SalesController extends Controller
 {
     use MyStoresTrait;
     use HasSelectedStoreTrait;
+    use HasProductsInStockTrait;
 
     /**
      * Display a listing of the resource.
@@ -105,6 +107,12 @@ class SalesController extends Controller
             $totalQty = 0;
             for($i = 0; $i < count($request['productsToSell']); $i++)
             {
+                if(!$this->hasQtyInStock($request['productsToSell'][$i])){
+                    throw new \Exception('Quantidade de produtos maior que a disponível no estoque');
+                }
+
+                $this->removeQtyFromProduct($request['productsToSell'][$i]['products_id'],$request['productsToSell'][$i]['qty']);
+
                 $totalValue += $request['productsToSell'][$i]['unity_price'] * $request['productsToSell'][$i]['qty'];
                 $totalQty   += $request['productsToSell'][$i]['qty'];
             }
@@ -172,12 +180,20 @@ class SalesController extends Controller
      */
     public function update(Request $request, string $id)
     {
+        
         try{
             // product_entries
             $totalValue = 0;
             $totalQty = 0;
+
             for($i = 0; $i < count($request['productsToSell']); $i++)
             {
+                if(!$this->hasQtyInStock($request['productsToSell'][$i])){
+                    throw new \Exception('Quantidade de produtos maior que a disponível no estoque');
+                }
+
+                $this->removeQtyFromProduct($request['productsToSell'][$i]['products_id'],$request['productsToSell'][$i]['qty']);
+
                 $totalValue += $request['productsToSell'][$i]['unity_price'] * $request['productsToSell'][$i]['qty'];
                 $totalQty   += $request['productsToSell'][$i]['qty'];
             }
@@ -212,8 +228,9 @@ class SalesController extends Controller
                 }
             }
         } catch (\Exception $e) {
-            return redirect()->back()->with('error', 'Falha ao editar a venda!');
+            return redirect()->back()->with('error', 'Falha ao editar a venda! '.$e);
         }
         return redirect(route('sales.index'));
     }
 }
+

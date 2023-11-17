@@ -206,7 +206,7 @@ export default {
             form: {
                 name: '',
                 description: '',
-                qty: '0',
+                qty: '1',
                 unity_price: '0',
                 stores_id: '',
                 category_id: '',
@@ -289,7 +289,7 @@ export default {
         resetAll(){
             this.form.name = '';
             this.form.description = '';
-            this.form.qty = '0';
+            this.form.qty = '1';
             this.form.unity_price = '0';
             this.form.category_id = '';
             this.form.type_entrie = 'BUY';

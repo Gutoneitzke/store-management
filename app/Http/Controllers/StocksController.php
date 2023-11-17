@@ -125,7 +125,6 @@ class StocksController extends Controller
             for($i = 0; $i < $request['qty']; $i++){
                 ProductHasEntry::create($productHasEntriesData);
             }
-
         } catch (\Exception $e) {
             return redirect()->back()->with('error', 'Falha ao registrar o produto!');
         }
@@ -171,8 +170,8 @@ class StocksController extends Controller
             $productData = [
                 'name'           => $request['name'],
                 'total_price'    => $request['qty'] * $request['unity_price'],
-                'qty_stock'      => (int)$request['qty'],
                 'stores_id'      => $request['stores_id'],
+                'qty_stock'      => $request['qty'],
                 'win_percentage' => (int)$request['win_percentage'],
             ];
 
@@ -215,8 +214,6 @@ class StocksController extends Controller
             $supplierHasProductsData = [
                 'supplier_id' => $request['suppliers_id'],
             ];
-            SupplierHasProduct::where('products_id',$id)->update($supplierHasProductsData);
-
         } catch (\Exception $e) {
             return redirect()->back()->with('error', 'Falha ao registrar o produto!');
         }
