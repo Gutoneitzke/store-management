@@ -44,7 +44,7 @@ const submit = () => {
 
     <AuthenticationCard>
         <template #logo>
-            Logo
+            <img src="../../../../public/logo.png" width="150" height="150">
         </template>
 
         <form @submit.prevent="submit">

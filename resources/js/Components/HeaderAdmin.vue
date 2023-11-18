@@ -2,7 +2,7 @@
     <header>
         <div class="header-left">
             <Link :href="route('admin.index')">
-                <img src="../../../../public/images/quanticocap-logo.png" alt="">
+                <img src="../../../../public/logo.png" alt="">
             </Link>
         </div>
         <nav class="header-center">
