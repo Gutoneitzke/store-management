@@ -5,11 +5,11 @@ import vue from '@vitejs/plugin-vue';
 export default defineConfig({
     server: {
         hmr: {
-            host: 'localhost',
+            host: '192.168.2.104',
         },
         watch: {
             usePolling: true
-        }
+        },
     },
     plugins: [
         laravel({
