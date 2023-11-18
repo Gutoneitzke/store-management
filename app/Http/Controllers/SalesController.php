@@ -75,6 +75,35 @@ class SalesController extends Controller
     }
 
     /**
+     * 
+     * Show the form for creating a new resource.
+     * @param int $id
+     * 
+     */
+    public function createAccordingQrcode($id){
+        $product               = Product::where('code', $id)
+                                    ->join('products_has_entries', 'products.id', '=', 'products_has_entries.products_id')
+                                    ->select('products.*','products_has_entries.unity_price')
+                                    ->first();
+        $products              = Product::whereIn('stores_id', $this->getMyStores())->get();
+        $productsHasCategories = ProductHasCategory::whereIn('products_id', $products->pluck('id')->toArray())->get();
+        $productsHasEntries    = ProductHasEntry::whereIn('products_id', $products->pluck('id')->toArray())->get();
+        $categories            = Category::whereIn('stores_id', $this->getMyStores())->get();
+        $customers             = Customer::whereIn('stores_id', $this->getMyStores())->get();
+        $myStores              = Store::whereIn('id', $this->getMyStores())->get();
+
+        return Inertia::render('StoreManagement/Sales/NewSale',[
+            'product'               => $product,
+            'products'              => $products,
+            'productsHasCategories' => $productsHasCategories,
+            'productsHasEntries'    => $productsHasEntries,
+            'categories'            => $categories,
+            'customers'             => $customers,
+            'myStores'              => $myStores
+        ]);
+    }
+
+    /**
      * Show the form for creating a new resource.
      */
     public function create()
@@ -87,6 +116,7 @@ class SalesController extends Controller
         $myStores              = Store::whereIn('id', $this->getMyStores())->get();
 
         return Inertia::render('StoreManagement/Sales/NewSale',[
+            'product'               => null,
             'products'              => $products,
             'productsHasCategories' => $productsHasCategories,
             'productsHasEntries'    => $productsHasEntries,

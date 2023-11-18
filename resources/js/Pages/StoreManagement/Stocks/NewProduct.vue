@@ -69,7 +69,7 @@
                         </div>
 
                         <div>
-                            <InputLabel for="description" value="Description *" />
+                            <InputLabel for="description" value="Description" />
                             <TextInput
                                 id="description"
                                 v-model="form.description"

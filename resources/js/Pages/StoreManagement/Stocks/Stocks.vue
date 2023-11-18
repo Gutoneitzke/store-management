@@ -76,8 +76,11 @@
                         </td>
                         <td 
                             class="px-6 py-4 whitespace-no-wrap" 
-                            v-text="s.code"
-                        ></td>
+                        >
+                            <a :href="route('qrcode.generate',s.code)" class="link-qrcode" target="_blank" title="Acessar QRCode">
+                                {{ s.code }}
+                            </a>
+                        </td>
                         <td>
                             <div class="flex gap-4 justify-center">
                                 <Link :href="route('stocks.edit',{id: s.id})" title="Editar">
@@ -117,6 +120,10 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+    .link-qrcode{
+        color: $blue;
+        text-decoration: underline;
+    }
     .qty_stock{
         text-align: center;
         span{

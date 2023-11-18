@@ -191,7 +191,7 @@ export default {
         TextInput,
         PrimaryButton
     },
-    props: ['products','productsHasEntries','productsHasCategories','categories','customers','myStores'],
+    props: ['product','products','productsHasEntries','productsHasCategories','categories','customers','myStores'],
     data() {
         return {
             form: {
@@ -212,6 +212,13 @@ export default {
             ],
             processing: false,
             fieldsToValidate: ['stores_id','type_sell','customers_id','productsToSell']
+        }
+    },
+    mounted(){
+        if(this.product != null){
+            this.form.stores_id = this.product.stores_id;
+            this.form.productsToSell[0]['products_id'] = this.product.id;
+            this.form.productsToSell[0]['unity_price'] = this.product.unity_price;
         }
     },
     methods: {
