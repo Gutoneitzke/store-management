@@ -36,7 +36,7 @@
                                 >
                                     <option v-for="c,i in getAccordingSelectedStore(customers)" :key="i" :value="c.id" v-text="c.name"></option>
                                 </select>
-                                <p v-else class="not-has-data">Nenhum fornecedor nessa loja! Crie <Link :href="route('customers.index')"><u>aqui</u></Link></p>
+                                <p v-else class="not-has-data">Nenhum cliente nessa loja! Crie <Link :href="route('customers.index')"><u>aqui</u></Link></p>
                             </div>
                         </div>
                     </div>
