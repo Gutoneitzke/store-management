@@ -27,10 +27,14 @@
                             <span v-text="supplier.length"></span>
                         </div>
                         <div>
+                            <span>Vendas últimos mês</span>
+                            <span v-text="salesLastMonth.length"></span>
+                        </div>
+                        <div style="background-color: #14a5a5;">
                             <span>Vendas todo período</span>
                             <span v-text="'R$ '+sumTotal(sales)"></span>
                         </div>
-                        <div>
+                        <div style="background-color: #14a5a5;">
                             <span>Vendas do dia</span>
                             <span v-text="'R$ '+sumTotal(salesToday)"></span>
                         </div>
@@ -76,7 +80,7 @@ export default {
         PageCard,
         BarChart
     },
-    props: ['productsInStock','qtyProducts','sales','customers','employeers','supplier','salesToday'],
+    props: ['productsInStock','qtyProducts','sales','customers','employeers','supplier','salesToday','salesLastMonth'],
     data() {
         return {
             charts: [

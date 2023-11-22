@@ -56,6 +56,17 @@ class DashboardController extends Controller
                         })
                         ->whereDate('po.created_at', Carbon::today())
                         ->get();
+
+            $salesLastMonth = DB::table('store_management.products_output as po')
+                                ->select('po.*')
+                                ->whereIn('po.id', function ($query) use ($selectedStore) {
+                                    $query->select(DB::raw('DISTINCT ps.sales_id'))
+                                        ->from('products_has_sales as ps')
+                                        ->join('products as p', 'p.id', '=', 'ps.products_id')
+                                        ->where('stores_id', '=', $selectedStore['id']);
+                                })
+                                ->whereDate('po.created_at', '>=', Carbon::today()->subMonth())
+                                ->get();
             
         } else {
             $products = Product::whereIn('stores_id', $this->getMyStores())->get();
@@ -87,8 +98,17 @@ class DashboardController extends Controller
                             })
                             ->whereDate('po.created_at', Carbon::today())
                             ->get();
-            
 
+            $salesLastMonth = DB::table('store_management.products_output as po')
+                            ->select('po.*')
+                            ->whereIn('po.id', function ($query) {
+                                $query->select(DB::raw('DISTINCT ps.sales_id'))
+                                    ->from('products_has_sales as ps')
+                                    ->join('products as p', 'p.id', '=', 'ps.products_id')
+                                    ->whereIn('stores_id', $this->getMyStores());
+                            })
+                            ->whereDate('po.created_at', '>=', Carbon::today()->subMonth())
+                            ->get();
         }
 
         $productsInStock = [
@@ -103,7 +123,8 @@ class DashboardController extends Controller
             'customers'       => $customers,
             'employeers'      => $employeers,
             'supplier'        => $suppliers,
-            'salesToday'      => $salesToday
+            'salesToday'      => $salesToday,
+            'salesLastMonth'  => $salesLastMonth
         ]);
     }
 }
