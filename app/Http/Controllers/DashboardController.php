@@ -9,6 +9,7 @@ use App\Models\Supplier;
 use App\Models\User;
 use App\Traits\HasSelectedStoreTrait;
 use App\Traits\MyStoresTrait;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
@@ -29,9 +30,7 @@ class DashboardController extends Controller
             $products = Product::where('stores_id', $selectedStore['id'])->get();
 
             $sales = DB::table('store_management.products_output as po')
-                        ->select('po.*', DB::raw('(SELECT GROUP_CONCAT(DISTINCT ps.sales_id) FROM products_has_sales ps
-                            JOIN products p ON p.id = ps.products_id
-                            WHERE stores_id = ' . $selectedStore['id'] . ') AS products_has_sales_id'))
+                        ->select('po.*')
                         ->whereIn('po.id', function ($query) use ($selectedStore) {
                             $query->select(DB::raw('DISTINCT ps.sales_id'))
                                 ->from('products_has_sales as ps')
@@ -46,14 +45,23 @@ class DashboardController extends Controller
                             ->where('stores_id', $selectedStore['id'])->get();
 
             $suppliers = Supplier::where('stores_id', $selectedStore['id'])->get();
+
+            $salesToday = DB::table('store_management.products_output as po')
+                        ->select('po.*')
+                        ->whereIn('po.id', function ($query) use ($selectedStore) {
+                            $query->select(DB::raw('DISTINCT ps.sales_id'))
+                                ->from('products_has_sales as ps')
+                                ->join('products as p', 'p.id', '=', 'ps.products_id')
+                                ->where('stores_id', '=', $selectedStore['id']);
+                        })
+                        ->whereDate('po.created_at', Carbon::today())
+                        ->get();
             
         } else {
             $products = Product::whereIn('stores_id', $this->getMyStores())->get();
 
             $sales = DB::table('store_management.products_output as po')
-                        ->select('po.*', DB::raw('(SELECT GROUP_CONCAT(DISTINCT ps.sales_id) FROM products_has_sales ps
-                            JOIN products p ON p.id = ps.products_id
-                            WHERE stores_id IN (' . implode(', ', $this->getMyStores()) . ')) AS products_has_sales_id'))
+                        ->select('po.*')
                         ->whereIn('po.id', function ($query) {
                             $query->select(DB::raw('DISTINCT ps.sales_id'))
                                 ->from('products_has_sales as ps')
@@ -68,6 +76,19 @@ class DashboardController extends Controller
                             ->whereIn('stores_id', $this->getMyStores())->get();
 
             $suppliers = Supplier::whereIn('stores_id', $this->getMyStores())->get();
+
+            $salesToday = DB::table('store_management.products_output as po')
+                            ->select('po.*')
+                            ->whereIn('po.id', function ($query) {
+                                $query->select(DB::raw('DISTINCT ps.sales_id'))
+                                    ->from('products_has_sales as ps')
+                                    ->join('products as p', 'p.id', '=', 'ps.products_id')
+                                    ->whereIn('stores_id', $this->getMyStores());
+                            })
+                            ->whereDate('po.created_at', Carbon::today())
+                            ->get();
+            
+
         }
 
         $productsInStock = [
@@ -77,11 +98,12 @@ class DashboardController extends Controller
 
         return Inertia::render('StoreManagement/Dashboard',[
             'productsInStock' => $productsInStock,
-            'qtyProducts' => $products->sum('qty_stock'),
-            'qtySales' => count($sales),
-            'qtyCustomers' => count($customers),
-            'qtyEmployeers' => count($employeers),
-            'qtySupplier' => count($suppliers),
+            'qtyProducts'     => $products->sum('qty_stock'),
+            'sales'           => $sales,
+            'customers'       => $customers,
+            'employeers'      => $employeers,
+            'supplier'        => $suppliers,
+            'salesToday'      => $salesToday
         ]);
     }
 }
