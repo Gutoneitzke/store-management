@@ -121,7 +121,7 @@
                         </div>
                     </div>
 
-                    <div class="flex items-center justify-end mt-4">
+                    <div v-if="getAccordingSelectedStore(products).length > 1" class="flex items-center justify-end mt-4">
                         <PrimaryButton v-if="form.productsToSell[0]['products_id']" @click="addMoreProductsToSell()">
                             + Adicionar Produto na venda
                         </PrimaryButton>

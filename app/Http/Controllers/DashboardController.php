@@ -41,8 +41,12 @@ class DashboardController extends Controller
             
             $customers = Customer::where('stores_id', $selectedStore['id'])->get();
 
-            $employeers = User::join('users_has_stores as us', 'users.id', '=', 'us.users_id')
-                            ->where('stores_id', $selectedStore['id'])->get();
+            $employeers = User::where('users.type', 'EMPLOYEE')
+                            ->join('users_has_stores', 'users.id', '=', 'users_has_stores.users_id')
+                            ->where('users_has_stores.stores_id', $selectedStore['id'])
+                            ->where('users.id', '!=', auth()->id())
+                            ->select('users.*')
+                            ->get();
 
             $suppliers = Supplier::where('stores_id', $selectedStore['id'])->get();
 
@@ -83,8 +87,12 @@ class DashboardController extends Controller
 
             $customers = Customer::whereIn('stores_id', $this->getMyStores())->get();
             
-            $employeers = User::join('users_has_stores as us', 'users.id', '=', 'us.users_id')
-                            ->whereIn('stores_id', $this->getMyStores())->get();
+            $employeers = User::where('users.type', 'EMPLOYEE')
+                            ->join('users_has_stores', 'users.id', '=', 'users_has_stores.users_id')
+                            ->whereIn('users_has_stores.stores_id', $this->getMyStores())
+                            ->where('users.id', '!=', auth()->id())
+                            ->select('users.*')
+                            ->get();
 
             $suppliers = Supplier::whereIn('stores_id', $this->getMyStores())->get();
 

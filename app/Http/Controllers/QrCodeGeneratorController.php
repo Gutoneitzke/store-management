@@ -8,7 +8,7 @@ class QrCodeGeneratorController extends Controller
 {
     public function generate($productCode) {
 
-        $route = 'http://192.168.2.104:3333/sales/create/'.$productCode;
+        $route = 'http://192.168.2.106:3333/sales/create/'.$productCode;
 
         $qrCode = QrCode::size(300)->format('png')->generate($route);
 

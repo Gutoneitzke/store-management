@@ -95,7 +95,7 @@ const logout = () => {
                             </div>
                         </div>
                         
-                        <div v-if="!route().current('stores.*') && $page.props.myStores.length > 1 && !route().current('*.create') && !route().current('*.edit')" class="hidden sm:items-center space-x-8 sm:-my-px sm:ml-10 sm:flex">
+                        <div v-if="!route().current('stores.*') && $page.props.myStores.length > 2 && !route().current('*.create') && !route().current('*.edit')" class="hidden sm:items-center space-x-8 sm:-my-px sm:ml-10 sm:flex">
                             <!-- Settings Dropdown -->
                             <div class="ml-3 relative">
                                 <Dropdown align="right" width="48">
