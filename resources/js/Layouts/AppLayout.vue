@@ -25,10 +25,6 @@ routesToShowOnlyMyOwnerStores.forEach(e => {
 
 const showingNavigationDropdown = ref(false);
 
-const hasStores = () => {
-    $page.props.myStores.length > 0
-};
-
 const switchToTeam = (team) => {
     router.put(route('current-team.update'), {
         team_id: team.id,
@@ -74,25 +70,25 @@ const logout = () => {
                                 </NavLink>
                             </div>
 
-                            <div v-if="hasStores" class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
+                            <div v-if="$page.props.myStores.length > 1" class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
                                 <NavLink :href="route('stocks.index')" :active="route().current('stocks.*') || route().current('suppliers.*') || route().current('categories.*')">
                                     Estoque
                                 </NavLink>
                             </div>
 
-                            <div v-if="hasStores" class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
+                            <div v-if="$page.props.myStores.length > 1" class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
                                 <NavLink :href="route('sales.index')" :active="route().current('sales.*')">
                                     Vendas
                                 </NavLink>
                             </div>
 
-                            <div v-if="hasStores" class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
+                            <div v-if="$page.props.myStores.length > 1" class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
                                 <NavLink :href="route('employers.index')" :active="route().current('employers.*')">
                                     Funcionários
                                 </NavLink>
                             </div>
 
-                            <div v-if="hasStores" class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
+                            <div v-if="$page.props.myStores.length > 1" class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
                                 <NavLink :href="route('customers.index')" :active="route().current('customers.*')">
                                     Clientes
                                 </NavLink>
