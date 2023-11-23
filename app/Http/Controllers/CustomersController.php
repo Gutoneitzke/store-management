@@ -26,12 +26,14 @@ class CustomersController extends Controller
 
         if($selectedStore){
             $customers = Customer::with('city')
-                ->where('stores_id', $selectedStore['id'])
-                ->get();
+                            ->where('stores_id', $selectedStore['id'])
+                            ->orderBy('id', 'DESC')
+                            ->get();
         } else {
             $customers = Customer::with('city')
-                        ->whereIn('stores_id', $this->getMyStores())
-                        ->get();
+                            ->whereIn('stores_id', $this->getMyStores())
+                            ->orderBy('id', 'DESC')
+                            ->get();
         }
 
         return Inertia::render('StoreManagement/Customers/Customers',[

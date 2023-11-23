@@ -23,9 +23,13 @@ class CategoriesController extends Controller
         $selectedStore = $this->getSelectedStore();
 
         if($selectedStore){
-            $categories = Category::where('stores_id', $selectedStore['id'])->get();
+            $categories = Category::where('stores_id', $selectedStore['id'])
+                            ->orderBy('id', 'DESC')
+                            ->get();
         } else {
-            $categories = Category::whereIn('stores_id', $this->getMyStores())->get();
+            $categories = Category::whereIn('stores_id', $this->getMyStores())
+                            ->orderBy('id', 'DESC')
+                            ->get();
         }
 
         return Inertia::render('StoreManagement/Categories/Categories',[

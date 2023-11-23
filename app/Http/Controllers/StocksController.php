@@ -30,9 +30,13 @@ class StocksController extends Controller
         $selectedStore = $this->getSelectedStore();
 
         if($selectedStore){
-            $products = Product::where('stores_id', $selectedStore['id'])->get();
+            $products = Product::where('stores_id', $selectedStore['id'])
+                            ->orderBy('id', 'DESC')
+                            ->get();
         } else {
-            $products = Product::whereIn('stores_id', $this->getMyStores())->get();
+            $products = Product::whereIn('stores_id', $this->getMyStores())
+                            ->orderBy('id', 'DESC')
+                            ->get();
         }
 
         return Inertia::render('StoreManagement/Stocks/Stocks',[

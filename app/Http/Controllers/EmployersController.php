@@ -32,6 +32,7 @@ class EmployersController extends Controller
                             ->where('users_has_stores.stores_id', $selectedStore['id'])
                             ->where('users.id', '!=', auth()->id())
                             ->select('users.*')
+                            ->orderBy('id', 'DESC')
                             ->get();
         } else {
             $employers = User::where('users.type', 'EMPLOYEE')
@@ -39,6 +40,7 @@ class EmployersController extends Controller
                             ->whereIn('users_has_stores.stores_id', $this->getMyStores())
                             ->where('users.id', '!=', auth()->id())
                             ->select('users.*')
+                            ->orderBy('id', 'DESC')
                             ->get();
         }
 

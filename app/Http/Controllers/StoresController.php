@@ -27,6 +27,7 @@ class StoresController extends Controller
             ->join('users', 'users.id', '=', 'users_has_stores.users_id')
             ->whereIn('users.type', ['ADMIN','STORE_OWNER'])
             ->select('stores.*')
+            ->orderBy('id', 'DESC')
             ->get();
 
         return Inertia::render('StoreManagement/Stores/Stores',[

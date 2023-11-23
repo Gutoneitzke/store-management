@@ -41,6 +41,7 @@ class SalesController extends Controller
                                 ->join('products as p', 'p.id', '=', 'ps.products_id')
                                 ->where('stores_id', '=', $selectedStore['id']);
                         })
+                        ->orderBy('id', 'DESC')
                         ->get();
 
 
@@ -59,6 +60,7 @@ class SalesController extends Controller
                                 ->join('products as p', 'p.id', '=', 'ps.products_id')
                                 ->whereIn('stores_id', $this->getMyStores());
                         })
+                        ->orderBy('id', 'DESC')
                         ->get();
 
 

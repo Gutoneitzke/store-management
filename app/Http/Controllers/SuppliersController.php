@@ -27,11 +27,13 @@ class SuppliersController extends Controller
 
         if($selectedStore){
             $suppliers = Supplier::with('city')
-                ->where('stores_id', $selectedStore['id'])
-                ->get();
+                            ->where('stores_id', $selectedStore['id'])
+                            ->orderBy('id', 'DESC')
+                            ->get();
         } else {
             $suppliers = Supplier::with('city')
                         ->whereIn('stores_id', $this->getMyStores())
+                        ->orderBy('id', 'DESC')
                         ->get();
         }
 
